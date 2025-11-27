@@ -1,0 +1,20 @@
+{% assign steps = site.tutorials | where: "tutorial_name", page.tutorial_name | where: "type", "step" | sort: "order" %}
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h3>Course Progress</h3>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">0 of {{ steps.size }} completed</div>
+  </div>
+  
+  <div class="tutorial-steps" id="tutorialSteps">
+    {% for step in steps %}
+    <div class="step-item {% if step.order == 1 %}active{% endif %}" data-step="{{ step.order }}" onclick="showStep({{ step.order }})">
+      <div class="step-number">{{ step.order }}</div>
+      <div class="step-title">{{ step.title }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</aside>

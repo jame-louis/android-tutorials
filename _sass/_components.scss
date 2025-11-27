@@ -1,0 +1,153 @@
+// Step Items
+.step-item {
+  padding: $spacing-md $spacing-lg;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+  border-left: 3px solid transparent;
+  border-radius: 0 $border-radius $border-radius 0;
+  margin: 0 $spacing-sm;
+
+  &:hover {
+    background: rgba($primary-blue, 0.05);
+  }
+
+  &.active {
+    background: rgba($primary-blue, 0.1);
+    border-left-color: $primary-blue;
+    font-weight: 600;
+  }
+
+  &.completed {
+    border-left-color: $success-green;
+
+    .step-number {
+      background: linear-gradient(135deg, $success-green 0%, #8bc34a 100%);
+      color: white;
+    }
+  }
+}
+
+.step-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: $text-light;
+  flex-shrink: 0;
+  transition: all $transition-fast;
+}
+
+.step-item.active .step-number {
+  background: linear-gradient(135deg, $primary-blue 0%, $secondary-blue 100%);
+  color: white;
+}
+
+.step-title {
+  flex: 1;
+  font-size: 14px;
+}
+
+// Tutorial Content
+.tutorial-content {
+  display: none;
+  animation: fadeIn $transition-medium;
+
+  &.active {
+    display: block;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// Tutorial Header
+.tutorial-header {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: $border-radius-xl;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-lg;
+  box-shadow: $shadow-lg;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.tutorial-meta {
+  display: flex;
+  gap: $spacing-lg;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  flex-wrap: wrap;
+}
+
+.difficulty-badge {
+  background: linear-gradient(135deg, $warning-orange 0%, #ffc107 100%);
+  color: white;
+  padding: $spacing-xs $spacing-md;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.duration-badge {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $text-medium;
+  font-size: 14px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: $text-medium;
+  font-size: 14px;
+}
+
+.stars {
+  color: #ffc107;
+}
+
+.tutorial-title {
+  font-size: 32px;
+  margin-bottom: $spacing-sm;
+  color: $text-dark;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.creator-info {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.creator-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary-blue 0%, $secondary-blue 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.creator-name {
+  font-size: 14px;
+  color: $text-medium;
+}

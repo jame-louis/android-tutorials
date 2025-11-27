@@ -1,0 +1,27 @@
+@media (max-width: $mobile) {
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .content-area {
+    padding: 0 $spacing-md;
+  }
+
+  .tutorial-title {
+    font-size: 24px;
+  }
+
+  .main-container {
+    margin-top: 70px;
+  }
+
+  .header {
+    height: 70px;
+  }
+}
+
+@media (max-width: $tablet) {
+  .right-sidebar {
+    display: none;
+  }
+}

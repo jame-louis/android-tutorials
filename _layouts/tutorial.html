@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {% seo %}
+  <script>
+    window.tutorialConfig = {
+      tutorialName: '{{ page.tutorial_name }}',
+      totalSteps: '{{ steps.size }}',
+    };
+  </script>
+</head>
+<body>
+  {% include header.html %}
+  
+  <div class="main-container">
+    {% include sidebar.html %}
+    
+    <main class="content-area">
+      {% for step in steps %}
+      <div class="tutorial-content" data-step="{{ step.order }}" id="step-{{ step.order }}">
+        <div class="tutorial-header">
+          {% if step.order == 1 %}
+          <div class="tutorial-meta">
+            <span class="difficulty-badge">{{ page.difficulty }}</span>
+            <span class="duration-badge">⏱ {{ page.duration }}</span>
+            <span class="rating">
+              <span class="stars">{{ '★' | times: page.rating }}</span>
+              <span>({{ page.rating_count | default: 0 | number_with_delimiter }})</span>
+            </span>
+          </div>
+          <h1 class="tutorial-title">{{ page.title }}</h1>
+          <div class="creator-info">
+            <div class="creator-avatar">U</div>
+            <span class="creator-name">Created by <a href="#">{{ page.creator }}</a></span>
+          </div>
+          {% else %}
+          <h1 class="tutorial-title">{{ step.title }}</h1>
+          {% endif %}
+        </div>
+
+        <div class="content-body">
+          {{ step.content | markdownify }}
+          
+          {% if forloop.last %}
+          <div class="complete-section">
+            <button class="complete-button" onclick="completeStepAndFinish('{{ page.tutorial_name }}')">
+              Complete this tutorial & earn {{ page.xp_reward }} XP
+            </button>
+          </div>
+          {% else %}
+          <div class="complete-section">
+            <button class="complete-button" onclick="completeStep('{{ page.turistic_name }}')">
+              Mark as Complete & Continue
+            </button>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+      
+      <!-- Course Completion -->
+      <div class="tutorial-content" data-step="complete">
+        <div class="content-body" style="text-align: center; padding: 60px 40px;">
+          <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
+          <h2 class="section-title" style="font-size: 32px;">Congratulations!</h2>
+          <p class="content-text" style="font-size: 18px;">
+            You've completed the "{{ page.title }}" tutorial!
+          </p>
+          <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
+            <h3>You Earned:</h3>
+            <div style="font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); -webkit-background-clip: text; color: transparent;">
+              +{{ page.xp_reward }} XP
+            </div>
+          </div>
+          <button class="nav-button next" onclick="window.location.href='/'">Back to Home →</button>
+        </div>
+      </div>
+    </main>
+  </div>
+  
+  <script src="{{ '/assets/js/tutorial.js' | relative_url }}"></script>
+</body>
+</html>
+
+{% assign steps = site.tutorials | where: "tutorial_name", page.tutorial_name | where: "type", "step" | sort: "order" %}
