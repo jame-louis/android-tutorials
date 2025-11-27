@@ -21,6 +21,6 @@ Welcome to the Roll-a-Ball tutorial! In this comprehensive guide, you'll learn h
 - Basic understanding of C# (helpful but not required)
 - 30-60 minutes of free time
 
-<div class="info-box"&gt;
+<div class="info-box">;
   <strong>Tip:</strong> Take your time with each step. Understanding the fundamentals is crucial for your Unity journey.
 </div>

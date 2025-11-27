@@ -33,6 +33,6 @@ Once created, Unity will open your new project with the default sample scene. Fa
 - **Inspector:** Properties of the selected GameObject
 - **Project Window:** All your project assets and files
 
-<div class="info-box tip"&gt;
+<div class="info-box tip">;
   <strong>Pro Tip:</strong> Use a dedicated folder for all your Unity projects to keep them organized.
 </div>
