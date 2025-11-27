@@ -1,3 +1,7 @@
+{% comment %} _layouts/tutorial.html - TOP OF FILE {% endcomment %}
+{% assign steps = site.tutorials | where: "tutorial_name", page.tutorial_name | where: "type", "step" | sort: "order" %}
+{% assign total_steps = steps.size %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +9,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ page.title }} | {{ site.title }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
-  {% seo %}
   <script>
     window.tutorialConfig = {
       tutorialName: '{{ page.tutorial_name }}',
-      totalSteps: '{{ steps.size }}',
+      totalSteps: '{{ total_steps }}',
     };
   </script>
 </head>
@@ -21,9 +24,9 @@
     
     <main class="content-area">
       {% for step in steps %}
-      <div class="tutorial-content" data-step="{{ step.order }}" id="step-{{ step.order }}">
+      <div class="tutorial-content" data-step="{{ step.order }}">
         <div class="tutorial-header">
-          {% if step.order == 1 %}
+          {% if forloop.first %}
           <div class="tutorial-meta">
             <span class="difficulty-badge">{{ page.difficulty }}</span>
             <span class="duration-badge">⏱ {{ page.duration }}</span>
@@ -47,13 +50,13 @@
           
           {% if forloop.last %}
           <div class="complete-section">
-            <button class="complete-button" onclick="completeStepAndFinish('{{ page.tutorial_name }}')">
+            <button class="complete-button" onclick="completeStepAndFinish()">
               Complete this tutorial & earn {{ page.xp_reward }} XP
             </button>
           </div>
           {% else %}
           <div class="complete-section">
-            <button class="complete-button" onclick="completeStep('{{ page.turistic_name }}')">
+            <button class="complete-button" onclick="completeStep()">
               Mark as Complete & Continue
             </button>
           </div>
@@ -62,7 +65,6 @@
       </div>
       {% endfor %}
       
-      <!-- Course Completion -->
       <div class="tutorial-content" data-step="complete">
         <div class="content-body" style="text-align: center; padding: 60px 40px;">
           <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
@@ -85,5 +87,3 @@
   <script src="{{ '/assets/js/tutorial.js' | relative_url }}"></script>
 </body>
 </html>
-
-{% assign steps = site.tutorials | where: "tutorial_name", page.tutorial_name | where: "type", "step" | sort: "order" %}
