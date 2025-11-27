@@ -8,8 +8,8 @@ rating: 5
 rating_count: 5361
 creator: Unity Technologies
 xp_reward: 50
+permalink: /tutorials/roll-a-ball/
 ---
-
 # Roll-a-Ball Tutorial
 
 Welcome to the Roll-a-Ball tutorial! Click "Start Learning" to begin.
