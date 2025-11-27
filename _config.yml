@@ -7,7 +7,6 @@ url: "https://jame-louis.github.io"
 collections:
   tutorials:
     output: true
-    permalink: /:collection/:name/
 
 # Defaults
 defaults:
