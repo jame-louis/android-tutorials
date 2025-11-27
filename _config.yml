@@ -1,7 +1,7 @@
-title: LearnHub
-description: Interactive tutorials for Unity and more
-baseurl: ""
-url: "https://your-github-username.github.io"
+title: Android Tutorials
+description: Android tutorials for beginners
+baseurl: "android-tutorials"
+url: "https://jame-louis.github.io"
 
 # Collections
 collections:
