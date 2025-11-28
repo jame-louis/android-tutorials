@@ -1,8 +1,0 @@
----
-layout: tutorial
-title: "下载并安装 Android Studio"
-tutorial_name: set-up-android-studio
-difficulty: Beginner
-duration: 20 mins
-creator: jame louis
----
