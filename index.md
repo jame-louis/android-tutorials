@@ -8,7 +8,12 @@ title: "安卓教程"
   <p style="font-size: 20px; color: #4a5568; margin-bottom: 40px;">给初学者的安卓教程</p>
   
   <div class="featured-tutorial" style="margin-top: 60px;">
-    <h2 style="margin-bottom: 30px; font-size: 24px;">Featured Tutorial</h2>
+    <h2 style="margin-bottom: 30px; font-size: 24px;">开始学习</h2>
+    <div class="tutorial-card" style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
+      <h3 style="font-size: 28px; margin-bottom: 15px;">下载并安装 Android Studio</h3>
+      <p style="font-size: 16px; color: #4a5568; margin-bottom: 25px;"></p>
+      <a href="{{ '/tutorials/set-up-android-studio/' | relative_url }}" class="nav-button next" style="display: inline-flex;">Start Learning →</a>
+    </div>
     <div class="tutorial-card" style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
       <h3 style="font-size: 28px; margin-bottom: 15px;">文本组件</h3>
       <p style="font-size: 16px; color: #4a5568; margin-bottom: 25px;"></p>
