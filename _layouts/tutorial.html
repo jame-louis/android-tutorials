@@ -67,10 +67,10 @@
           <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
           <h2 style="font-size: 32px;">恭喜!</h2>
           <p style="font-size: 18px;">
-            您已经完成了 "{{ page.tutorial_name| escape }}" 教程!
+            您已经完成了 "{{ page.title | escape }}" 教程!
           </p>
-          <button class="nav-button next" onclick="window.location.href='{{ '/' | relative_url }}'">
-            Back to Home →
+          <button class="nav-button next" onclick="window.location.href='{{ '/' | relative_url }}'" style="margin: 0 auto; display: block;"></button>
+            返回主页→
           </button>
         </div>
       </div>
@@ -112,8 +112,7 @@
           currentElement = currentElement.nextElementSibling;
           
           // Stop if we hit another step header
-          if (currentElement.tagName === 'H2' && 
-              currentElement.textContent.trim().match(/^Step\s+\d+/i)) {
+          if (currentElement.tagName === 'H2') {
             break;
           }
           
