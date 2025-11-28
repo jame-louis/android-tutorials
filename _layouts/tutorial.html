@@ -10,11 +10,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ page.title }} | {{ site.title }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <!-- Inject config as JSON to satisfy linters -->
+  <script id="tutorial-config" type="application/json">
+    {{ {"tutorialName": page.tutorial_name, "totalSteps": total_steps} | jsonify }}
+  </script>
   <script>
-    window.tutorialConfig = {
-      tutorialName: '{{ page.tutorial_name }}',
-      totalSteps: {{ total_steps }}
-    };
+    window.tutorialConfig = JSON.parse(document.getElementById('tutorial-config').textContent);
   </script>
 </head>
 <body>
@@ -26,7 +27,7 @@
     <main class="content-area">
       {% for i in (1..total_steps) %}
         {% assign step_content = step_sections[i] %}
-        {% assign step_lines = step_content | split: newline %}
+        {% assign step_lines = step_content | split: '\n' %}
         {% assign step_header = step_lines[0] %}
         {% assign duration_line = step_lines[1] %}
         
@@ -46,7 +47,7 @@
           {% if line contains '---' %}
             {% break %}
           {% endif %}
-          {% assign step_body = step_body | append: line | append: newline %}
+          {% assign step_body = step_body | append: line | append: '\n' %}
         {% endfor %}
         
         <div class="tutorial-content" data-step="{{ step_number }}">

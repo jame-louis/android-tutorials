@@ -175,7 +175,8 @@ function toggleSidebar() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-  const config = window.tutorialConfig;
+  const configScript = document.getElementById('tutorial-config');
+  const config = configScript ? JSON.parse(configScript.textContent) : window.tutorialConfig;
   tutorialManager = new TutorialManager(config.tutorialName, config.totalSteps);
   
   document.addEventListener('click', function(event) {
