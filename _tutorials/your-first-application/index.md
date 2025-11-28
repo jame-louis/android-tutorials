@@ -1,7 +1,7 @@
 ---
 layout: tutorial
-title: "下载并安装 Android Studio"
-tutorial_name: set-up-android-studio
+title: "您的第一个Android应用"
+tutorial_name: your-first-application
 difficulty: Beginner
 duration: 20 mins
 creator: jame louis

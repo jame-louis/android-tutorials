@@ -4,20 +4,21 @@ title: "安卓教程"
 ---
 
 <div class="hero-section" style="text-align: center; padding: 100px 20px; max-width: 800px; margin: 0 auto;">
-  <h1 style="font-size: 48px; margin-bottom: 20px; background: linear-gradient(135deg, #0078ff 0%, #00c6ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">Master Unity Development</h1>
+  <h1 style="font-size: 48px; margin-bottom: 20px; background: linear-gradient(135deg, #0078ff 0%, #00c6ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent;">安卓开发教程</h1>
   <p style="font-size: 20px; color: #4a5568; margin-bottom: 40px;">给初学者的安卓教程</p>
   
   <div class="featured-tutorial" style="margin-top: 60px;">
-    <h2 style="margin-bottom: 30px; font-size: 24px;">开始学习</h2>
-    <div class="tutorial-card" style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
-      <h3 style="font-size: 28px; margin-bottom: 15px;">下载并安装 Android Studio</h3>
-      <p style="font-size: 16px; color: #4a5568; margin-bottom: 25px;"></p>
-      <a href="{{ '/tutorials/set-up-android-studio/' | relative_url }}" class="nav-button next" style="display: inline-flex;">Start Learning →</a>
-    </div>
-    <div class="tutorial-card" style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);">
-      <h3 style="font-size: 28px; margin-bottom: 15px;">文本组件</h3>
-      <p style="font-size: 16px; color: #4a5568; margin-bottom: 25px;"></p>
-      <a href="{{ '/tutorials/text-view/' | relative_url }}" class="nav-button next" style="display: inline-flex;">Start Learning →</a>
-    </div>
+    <h2 style="margin-bottom: 30px; font-size: 24px;">开始学习</h2>    
+    <ol>
+      <li>
+        <a href="{{ '/tutorials/set-up-android-studio/' | relative_url }}" class="nav-button next" style="display: inline-flex;">下载并安装 Android Studio →</a>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/your-first-application/' | relative_url }}" class="nav-button next" style="display: inline-flex;">您的第一个Android应用 →</a>
+      </li>
+      <li>
+        <a href="{{ '/tutorials/text-view/' | relative_url }}" class="nav-button next" style="display: inline-flex;">文本组件 →</a>
+      </li>
+    </ol>
   </div>
 </div>
