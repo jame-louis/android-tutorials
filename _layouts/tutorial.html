@@ -14,7 +14,6 @@
   <style>
     .tutorial-step {
       display: none;
-      padding: 20px;
     }
     .tutorial-step.active {
       display: block;
@@ -25,7 +24,7 @@
       border-top: 2px solid #eee;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      gap: 20px;
     }
   </style>
 </head>
@@ -33,7 +32,19 @@
   {% include header.html %}
   
   <div class="main-container">
-    {% include sidebar.html %}
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>Course Progress</h3>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 of 0 completed</div>
+      </div>
+      
+      <div class="tutorial-steps" id="tutorialSteps">
+        <!-- Steps will be generated dynamically -->
+      </div>
+    </aside>
     
     <main class="content-area">
       <div class="tutorial-header">
@@ -68,11 +79,11 @@
         {{ content }}
       </div>
 
-      <div class="tutorial-content" data-step="complete" style="display: none;">
-        <div class="content-body" style="text-align: center; padding: 60px 40px;">
+      <div class="tutorial-step" data-step="complete" style="display: none;">
+        <div style="text-align: center; padding: 60px 40px;">
           <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
-          <h2 class="section-title" style="font-size: 32px;">Congratulations!</h2>
-          <p class="content-text" style="font-size: 18px;">
+          <h2 style="font-size: 32px;">Congratulations!</h2>
+          <p style="font-size: 18px;">
             You've completed the "{{ page.title | escape }}" tutorial!
           </p>
           <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
@@ -90,6 +101,8 @@
   </div>
   
   <script>
+    let tutorialSteps = [];
+    
     document.addEventListener('DOMContentLoaded', function() {
       const config = JSON.parse(document.getElementById('tutorial-config').textContent);
       const content = document.getElementById('tutorial-content');
@@ -97,7 +110,7 @@
       // Find all h2 elements that start with "Step"
       const allH2 = content.querySelectorAll('h2');
       const stepHeaders = Array.from(allH2).filter(h2 => 
-        h2.textContent.trim().startsWith('Step ')
+        h2.textContent.trim().match(/^Step\s+\d+/i)
       );
       
       if (stepHeaders.length === 0) {
@@ -106,11 +119,13 @@
       }
       
       // Wrap each step in a container
-      const steps = [];
       stepHeaders.forEach((header, index) => {
         const stepDiv = document.createElement('div');
         stepDiv.className = 'tutorial-step';
         stepDiv.dataset.step = index + 1;
+        
+        // Extract step title
+        const stepTitle = header.textContent.trim().replace(/^Step\s+\d+:\s*/i, '');
         
         // Collect elements between this header and the next
         let currentElement = header;
@@ -121,7 +136,7 @@
           
           // Stop if we hit another step header
           if (currentElement.tagName === 'H2' && 
-              currentElement.textContent.trim().startsWith('Step ')) {
+              currentElement.textContent.trim().match(/^Step\s+\d+/i)) {
             break;
           }
           
@@ -137,10 +152,22 @@
         const navDiv = document.createElement('div');
         navDiv.className = 'step-navigation';
         
+        // Previous button
+        if (index > 0) {
+          const prevBtn = document.createElement('button');
+          prevBtn.className = 'nav-button prev';
+          prevBtn.textContent = '← Previous Step';
+          prevBtn.onclick = () => showStep(index);
+          navDiv.appendChild(prevBtn);
+        } else {
+          navDiv.appendChild(document.createElement('div'));
+        }
+        
+        // Next/Complete button
         if (index < stepHeaders.length - 1) {
           const nextBtn = document.createElement('button');
           nextBtn.className = 'complete-button';
-          nextBtn.textContent = 'Mark as Complete & Continue';
+          nextBtn.textContent = 'Mark as Complete & Continue →';
           nextBtn.onclick = () => completeStep(index + 1);
           navDiv.appendChild(nextBtn);
         } else {
@@ -152,24 +179,52 @@
         }
         
         stepDiv.appendChild(navDiv);
-        steps.push(stepDiv);
+        tutorialSteps.push({ div: stepDiv, title: stepTitle });
         
         // Remove original elements
         stepElements.forEach(el => el.remove());
       });
       
       // Add all steps to content
-      steps.forEach(step => content.appendChild(step));
+      tutorialSteps.forEach(step => content.appendChild(step.div));
       
       // Update config with total steps
-      config.totalSteps = steps.length;
+      config.totalSteps = tutorialSteps.length;
       window.tutorialConfig = config;
       
+      // Generate sidebar
+      generateSidebar();
+      
       // Show first step or saved progress
-      const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
-      const savedStep = progress[config.tutorialName];
-      showStep(savedStep || 1);
+      const progress = getProgress();
+      const lastCompleted = Math.max(0, ...progress);
+      showStep(lastCompleted > 0 ? lastCompleted : 1);
+      updateProgress();
     });
+    
+    function generateSidebar() {
+      const stepsContainer = document.getElementById('tutorialSteps');
+      stepsContainer.innerHTML = '';
+      
+      tutorialSteps.forEach((step, index) => {
+        const stepItem = document.createElement('div');
+        stepItem.className = 'step-item';
+        stepItem.dataset.step = index + 1;
+        stepItem.onclick = () => showStep(index + 1);
+        
+        const stepNumber = document.createElement('div');
+        stepNumber.className = 'step-number';
+        stepNumber.textContent = index + 1;
+        
+        const stepTitle = document.createElement('div');
+        stepTitle.className = 'step-title';
+        stepTitle.textContent = step.title;
+        
+        stepItem.appendChild(stepNumber);
+        stepItem.appendChild(stepTitle);
+        stepsContainer.appendChild(stepItem);
+      });
+    }
     
     function showStep(stepNum) {
       document.querySelectorAll('.tutorial-step').forEach(el => {
@@ -181,18 +236,20 @@
       if (targetStep) {
         targetStep.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        updateSidebarActive(stepNum);
       }
     }
     
     function completeStep(currentStep) {
-      const config = window.tutorialConfig;
       saveProgress(currentStep);
+      updateProgress();
       showStep(currentStep + 1);
     }
     
     function completeStepAndFinish() {
       const config = window.tutorialConfig;
       saveProgress(config.totalSteps);
+      updateProgress();
       
       // Hide all steps
       document.querySelectorAll('.tutorial-step').forEach(el => {
@@ -209,8 +266,48 @@
     function saveProgress(stepNum) {
       const config = window.tutorialConfig;
       const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
-      progress[config.tutorialName] = stepNum;
+      const tutorialProgress = progress[config.tutorialName] || [];
+      
+      if (!tutorialProgress.includes(stepNum)) {
+        tutorialProgress.push(stepNum);
+      }
+      
+      progress[config.tutorialName] = tutorialProgress;
       localStorage.setItem('tutorialProgress', JSON.stringify(progress));
+    }
+    
+    function getProgress() {
+      const config = window.tutorialConfig;
+      const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
+      return progress[config.tutorialName] || [];
+    }
+    
+    function updateProgress() {
+      const config = window.tutorialConfig;
+      const completed = getProgress();
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      
+      const percentage = (completed.length / config.totalSteps) * 100;
+      progressFill.style.width = percentage + '%';
+      progressText.textContent = `${completed.length} of ${config.totalSteps} completed`;
+      
+      // Update sidebar
+      document.querySelectorAll('.step-item').forEach(item => {
+        const stepNum = parseInt(item.dataset.step);
+        if (completed.includes(stepNum)) {
+          item.classList.add('completed');
+        }
+      });
+    }
+    
+    function updateSidebarActive(stepNum) {
+      document.querySelectorAll('.step-item').forEach(item => {
+        item.classList.remove('active');
+        if (parseInt(item.dataset.step) === stepNum) {
+          item.classList.add('active');
+        }
+      });
     }
     
     function awardXP(xp) {
@@ -220,5 +317,6 @@
     }
   </script>
   
+  <script src="{{ '/assets/js/tutorial.js' | relative_url }}"></script>
 </body>
 </html>
