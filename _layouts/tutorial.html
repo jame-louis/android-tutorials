@@ -1,12 +1,3 @@
-{% comment %} Parse steps from single markdown file {% endcomment %}
-{% assign raw_content = page.content %}
-
-{% comment %} Split by "## Step " - note the space after Step {% endcomment %}
-{% assign step_sections = raw_content | split: '## Step ' %}
-
-{% comment %} First section is everything before first step, so total steps = size - 1 {% endcomment %}
-{% assign total_steps = step_sections.size | minus: 1 %}
-
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: 'en' }}">
 <head>
@@ -17,26 +8,24 @@
   <script id="tutorial-config" type="application/json">
   {
     "tutorialName": {{ page.tutorial_name | jsonify }},
-    "totalSteps": {{ total_steps }},
     "xpReward": {{ page.xp_reward | default: 100 }}
   }
   </script>
-  <script>
-    window.tutorialConfig = JSON.parse(document.getElementById('tutorial-config').textContent);
-  </script>
   <style>
-    .tutorial-content {
+    .tutorial-step {
       display: none;
+      padding: 20px;
     }
-    .tutorial-content.active {
+    .tutorial-step.active {
       display: block;
     }
-    .error-message {
-      padding: 20px;
-      background: #fee;
-      border: 1px solid #fcc;
-      border-radius: 8px;
-      margin: 20px;
+    .step-navigation {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
   </style>
 </head>
@@ -47,136 +36,173 @@
     {% include sidebar.html %}
     
     <main class="content-area">
-      {% if total_steps <= 0 %}
-        <div class="error-message">
-          <h2>No Tutorial Steps Found</h2>
-          <p>Please format your content with "## Step N: Title" headers.</p>
-          <p>Example: <code>## Step 1: Getting Started</code></p>
-          <p>Debug info: Found {{ step_sections.size }} sections, total_steps = {{ total_steps }}</p>
-        </div>
-      {% else %}
-        {% comment %} Loop through each step section (skip first which is pre-content) {% endcomment %}
-        {% for i in (1..total_steps) %}
-          {% assign step_content = step_sections[i] %}
-          {% assign step_lines = step_content | split: '
-' %}
-          
-          {% comment %} First line should be "N: Title" {% endcomment %}
-          {% assign first_line = step_lines[0] | strip %}
-          
-          {% comment %} Parse step number and title from "1: Title" format {% endcomment %}
-          {% assign step_parts = first_line | split: ': ' %}
-          {% assign step_number = step_parts[0] | strip %}
-          {% assign step_title = step_parts[1] | default: 'Untitled' | strip %}
-          
-          {% comment %} Collect all remaining lines as body content {% endcomment %}
-          {% assign step_body = '' %}
-          {% for line_index in (1..step_lines.size) %}
-            {% if line_index > 0 %}
-              {% assign step_body = step_body | append: step_lines[line_index] | append: '
-' %}
-            {% endif %}
-          {% endfor %}
-          
-          <div class="tutorial-content {% if i == 1 %}active{% endif %}" data-step="{{ step_number }}">
-            <div class="tutorial-header">
-              {% if i == 1 %}
-                <div class="tutorial-meta">
-                  {% if page.difficulty %}
-                    <span class="difficulty-badge">{{ page.difficulty | escape }}</span>
-                  {% endif %}
-                  {% if page.duration %}
-                    <span class="duration-badge">⏱ {{ page.duration | escape }}</span>
-                  {% endif %}
-                  {% if page.rating %}
-                    <span class="rating">
-                      <span class="stars">
-                        {% for j in (1..page.rating) %}★{% endfor %}
-                      </span>
-                      {% if page.rating_count %}
-                        <span>({{ page.rating_count | number_with_delimiter }})</span>
-                      {% endif %}
-                    </span>
-                  {% endif %}
-                </div>
-                <h1 class="tutorial-title">{{ page.title | escape }}</h1>
-                {% if page.creator %}
-                  <div class="creator-info">
-                    <div class="creator-avatar">{{ page.creator | slice: 0 | upcase }}</div>
-                    <span class="creator-name">Created by <a href="#">{{ page.creator | escape }}</a></span>
-                  </div>
-                {% endif %}
-              {% else %}
-                <h1 class="tutorial-title">Step {{ step_number }}: {{ step_title | escape }}</h1>
+      <div class="tutorial-header">
+        <div class="tutorial-meta">
+          {% if page.difficulty %}
+            <span class="difficulty-badge">{{ page.difficulty | escape }}</span>
+          {% endif %}
+          {% if page.duration %}
+            <span class="duration-badge">⏱ {{ page.duration | escape }}</span>
+          {% endif %}
+          {% if page.rating %}
+            <span class="rating">
+              <span class="stars">
+                {% for j in (1..page.rating) %}★{% endfor %}
+              </span>
+              {% if page.rating_count %}
+                <span>({{ page.rating_count | number_with_delimiter }})</span>
               {% endif %}
-            </div>
-
-            <div class="content-body">
-              {{ step_body | markdownify }}
-              
-              <div class="complete-section">
-                {% if i == total_steps %}
-                  <button class="complete-button" onclick="completeStepAndFinish()">
-                    Complete this tutorial & earn {{ page.xp_reward | default: 100 }} XP
-                  </button>
-                {% else %}
-                  <button class="complete-button" onclick="completeStep()">
-                    Mark as Complete & Continue
-                  </button>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        {% endfor %}
-        
-        <div class="tutorial-content" data-step="complete">
-          <div class="content-body" style="text-align: center; padding: 60px 40px;">
-            <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
-            <h2 class="section-title" style="font-size: 32px;">Congratulations!</h2>
-            <p class="content-text" style="font-size: 18px;">
-              You've completed the "{{ page.title | escape }}" tutorial!
-            </p>
-            <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
-              <h3>You Earned:</h3>
-              <div style="font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                +{{ page.xp_reward | default: 100 }} XP
-              </div>
-            </div>
-            <button class="nav-button next" onclick="window.location.href='{{ '/' | relative_url }}'">
-              Back to Home →
-            </button>
-          </div>
+            </span>
+          {% endif %}
         </div>
-      {% endif %}
+        <h1 class="tutorial-title">{{ page.title | escape }}</h1>
+        {% if page.creator %}
+          <div class="creator-info">
+            <div class="creator-avatar">{{ page.creator | slice: 0 | upcase }}</div>
+            <span class="creator-name">Created by <a href="#">{{ page.creator | escape }}</a></span>
+          </div>
+        {% endif %}
+      </div>
+
+      <div id="tutorial-content">
+        {{ content }}
+      </div>
+
+      <div class="tutorial-content" data-step="complete" style="display: none;">
+        <div class="content-body" style="text-align: center; padding: 60px 40px;">
+          <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
+          <h2 class="section-title" style="font-size: 32px;">Congratulations!</h2>
+          <p class="content-text" style="font-size: 18px;">
+            You've completed the "{{ page.title | escape }}" tutorial!
+          </p>
+          <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
+            <h3>You Earned:</h3>
+            <div style="font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+              +{{ page.xp_reward | default: 100 }} XP
+            </div>
+          </div>
+          <button class="nav-button next" onclick="window.location.href='{{ '/' | relative_url }}'">
+            Back to Home →
+          </button>
+        </div>
+      </div>
     </main>
   </div>
   
   <script>
-    // Tutorial navigation functions
+    document.addEventListener('DOMContentLoaded', function() {
+      const config = JSON.parse(document.getElementById('tutorial-config').textContent);
+      const content = document.getElementById('tutorial-content');
+      
+      // Find all h2 elements that start with "Step"
+      const allH2 = content.querySelectorAll('h2');
+      const stepHeaders = Array.from(allH2).filter(h2 => 
+        h2.textContent.trim().startsWith('Step ')
+      );
+      
+      if (stepHeaders.length === 0) {
+        console.warn('No step headers found');
+        return;
+      }
+      
+      // Wrap each step in a container
+      const steps = [];
+      stepHeaders.forEach((header, index) => {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'tutorial-step';
+        stepDiv.dataset.step = index + 1;
+        
+        // Collect elements between this header and the next
+        let currentElement = header;
+        const stepElements = [header];
+        
+        while (currentElement.nextElementSibling) {
+          currentElement = currentElement.nextElementSibling;
+          
+          // Stop if we hit another step header
+          if (currentElement.tagName === 'H2' && 
+              currentElement.textContent.trim().startsWith('Step ')) {
+            break;
+          }
+          
+          stepElements.push(currentElement);
+        }
+        
+        // Move elements into step container
+        stepElements.forEach(el => {
+          stepDiv.appendChild(el.cloneNode(true));
+        });
+        
+        // Add navigation buttons
+        const navDiv = document.createElement('div');
+        navDiv.className = 'step-navigation';
+        
+        if (index < stepHeaders.length - 1) {
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'complete-button';
+          nextBtn.textContent = 'Mark as Complete & Continue';
+          nextBtn.onclick = () => completeStep(index + 1);
+          navDiv.appendChild(nextBtn);
+        } else {
+          const completeBtn = document.createElement('button');
+          completeBtn.className = 'complete-button';
+          completeBtn.textContent = `Complete this tutorial & earn ${config.xpReward} XP`;
+          completeBtn.onclick = completeStepAndFinish;
+          navDiv.appendChild(completeBtn);
+        }
+        
+        stepDiv.appendChild(navDiv);
+        steps.push(stepDiv);
+        
+        // Remove original elements
+        stepElements.forEach(el => el.remove());
+      });
+      
+      // Add all steps to content
+      steps.forEach(step => content.appendChild(step));
+      
+      // Update config with total steps
+      config.totalSteps = steps.length;
+      window.tutorialConfig = config;
+      
+      // Show first step or saved progress
+      const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
+      const savedStep = progress[config.tutorialName];
+      showStep(savedStep || 1);
+    });
+    
     function showStep(stepNum) {
-      document.querySelectorAll('.tutorial-content').forEach(el => {
+      document.querySelectorAll('.tutorial-step').forEach(el => {
         el.classList.remove('active');
       });
-      const targetStep = document.querySelector(`[data-step="${stepNum}"]`);
+      document.querySelector('[data-step="complete"]').style.display = 'none';
+      
+      const targetStep = document.querySelector(`.tutorial-step[data-step="${stepNum}"]`);
       if (targetStep) {
         targetStep.classList.add('active');
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
     
-    function completeStep() {
-      const currentStep = document.querySelector('.tutorial-content.active');
-      if (currentStep) {
-        const stepNum = parseInt(currentStep.dataset.step);
-        saveProgress(stepNum);
-        showStep(stepNum + 1);
-      }
+    function completeStep(currentStep) {
+      const config = window.tutorialConfig;
+      saveProgress(currentStep);
+      showStep(currentStep + 1);
     }
     
     function completeStepAndFinish() {
       const config = window.tutorialConfig;
       saveProgress(config.totalSteps);
-      showStep('complete');
+      
+      // Hide all steps
+      document.querySelectorAll('.tutorial-step').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // Show completion screen
+      document.querySelector('[data-step="complete"]').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
       awardXP(config.xpReward);
     }
     
@@ -190,18 +216,8 @@
     function awardXP(xp) {
       const currentXP = parseInt(localStorage.getItem('totalXP') || '0');
       localStorage.setItem('totalXP', currentXP + xp);
+      console.log(`Awarded ${xp} XP! Total: ${currentXP + xp}`);
     }
-    
-    // Load progress on page load
-    document.addEventListener('DOMContentLoaded', function() {
-      const config = window.tutorialConfig;
-      const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
-      const savedStep = progress[config.tutorialName];
-      
-      if (savedStep && savedStep > 1 && savedStep <= config.totalSteps) {
-        showStep(savedStep);
-      }
-    });
   </script>
   
   <script src="{{ '/assets/js/tutorial.js' | relative_url }}"></script>
