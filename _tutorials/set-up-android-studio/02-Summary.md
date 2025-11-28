@@ -3,7 +3,7 @@ layout: tutorial
 tutorial_name: set-up-android-studio
 type: step
 order: 2
-title: Summary
+title: 总结
 duration: "2 mins"
 ---
 

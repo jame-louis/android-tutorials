@@ -1,26 +1,23 @@
 ---
 layout: tutorial
-tutorial_name: text-view 
+tutorial_name: set-up-android-studio 
 type: step
 order: 1
-title: 文本组件介绍
+title: 准备工作
 duration: "2 分钟"
 ---
 
-文本组件是 Android 开发中用于显示文本的组件。
+在本教程中，你将学习如何下载并安装 Android Studio，这是一个用于开发 Android 应用的集成开发环境（IDE）。
+
+Android Studio 是 Google 提供的官方 IDE，用于开发 Android 应用。它包含了 Android 开发所需的所有工具，包括代码编辑器、调试器、布局编辑器等。
 
 ## 你将学到：
-- 项目设置与场景管理
-- 物理效果与玩家控制
-- 摄像机脚本与跟随系统
-- 碰撞检测与拾取物体
-- UI 实现与分数显示
+- 如何检查您的计算机配置是否满足运行 Android Studio 的最低要求
+- 如何下载并安装 Android Studio
 
 ## 前置条件：
-- 已安装 Android Studio 4.1.1 或更高版本
-- 具备 Java 的基础理解（有帮助但非必需）
+- 一台运行64位版本的Windows (8, 10或11)、macOS 的计算机
+- 计算机可以访问网络
 - 30–60 分钟的空闲时间
 
-<div class="info-box">
-  <strong>提示：</strong> 请耐心完成每个步骤。掌握基础对于你的 Android 学习至关重要。
-</div>
+
