@@ -4,19 +4,37 @@
 {% assign total_steps = step_sections.size | minus: 1 %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ page.lang | default: 'en' }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page.title }} | {{ site.title }}</title>
+  <title>{{ page.title | escape }} | {{ site.title | escape }}</title>
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
-  <!-- Inject config as JSON to satisfy linters -->
   <script id="tutorial-config" type="application/json">
-  {"tutorialName":"{{ page.tutorial_name | escape }}","totalSteps":{{ total_steps | default: 0 }}}
+  {
+    "tutorialName": {{ page.tutorial_name | jsonify }},
+    "totalSteps": {{ total_steps | default: 0 }},
+    "xpReward": {{ page.xp_reward | default: 0 }}
+  }
   </script>
   <script>
     window.tutorialConfig = JSON.parse(document.getElementById('tutorial-config').textContent);
   </script>
+  <style>
+    .tutorial-content {
+      display: none;
+    }
+    .tutorial-content.active {
+      display: block;
+    }
+    .error-message {
+      padding: 20px;
+      background: #fee;
+      border: 1px solid #fcc;
+      border-radius: 8px;
+      margin: 20px;
+    }
+  </style>
 </head>
 <body>
   {% include header.html %}
@@ -25,88 +43,119 @@
     {% include sidebar.html %}
     
     <main class="content-area">
-      {% for i in (1..total_steps) %}
-        {% assign step_content = step_sections[i] %}
-        {% assign step_lines = step_content | split: '\n' %}
-        {% assign step_header = step_lines[0] %}
-        {% assign duration_line = step_lines[1] %}
-        
-        {% comment %} Extract step number and title {% endcomment %}
-        {% assign step_parts = step_header | split: ': ' %}
-        {% assign step_number = step_parts[0] %}
-        {% assign step_title = step_parts[1] %}
-        
-        {% comment %} Extract duration {% endcomment %}
-        {% assign duration_parts = duration_line | split: 'duration: ' %}
-        {% assign step_duration = duration_parts[1] %}
-        
-        {% comment %} Get content without header lines {% endcomment %}
-        {% assign content_start = 3 %}
-        {% assign step_body = '' %}
-        {% for line in step_lines offset: content_start %}
-          {% if line contains '---' %}
-            {% break %}
-          {% endif %}
-          {% assign step_body = step_body | append: line | append: '\n' %}
-        {% endfor %}
-        
-        <div class="tutorial-content" data-step="{{ step_number }}">
-          <div class="tutorial-header">
-            {% if i == 1 %}
-              <div class="tutorial-meta">
-                <span class="difficulty-badge">{{ page.difficulty }}</span>
-                <span class="duration-badge">⏱ {{ page.duration }}</span>
-                <span class="rating">
-                  <span class="stars">{{ '★' | times: page.rating }}</span>
-                  <span>({{ page.rating_count | default: 0 | number_with_delimiter }})</span>
-                </span>
-              </div>
-              <h1 class="tutorial-title">{{ page.title }}</h1>
-              <div class="creator-info">
-                <div class="creator-avatar">U</div>
-                <span class="creator-name">Created by <a href="#">{{ page.creator }}</a></span>
-              </div>
-            {% else %}
-              <h1 class="tutorial-title">{{ step_title }}</h1>
-            {% endif %}
-          </div>
-
-          <div class="content-body">
-            {{ step_body | markdownify }}
-            
-            {% if i == total_steps %}
-              <div class="complete-section">
-                <button class="complete-button" onclick="completeStepAndFinish()">
-                  Complete this tutorial & earn {{ page.xp_reward }} XP
-                </button>
-              </div>
-            {% else %}
-              <div class="complete-section">
-                <button class="complete-button" onclick="completeStep()">
-                  Mark as Complete & Continue
-                </button>
-              </div>
-            {% endif %}
-          </div>
+      {% if total_steps == 0 %}
+        <div class="error-message">
+          <h2>No Tutorial Steps Found</h2>
+          <p>Please format your content with "## Step N: Title" headers.</p>
         </div>
-      {% endfor %}
-      
-      <div class="tutorial-content" data-step="complete">
-        <div class="content-body" style="text-align: center; padding: 60px 40px;">
-          <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
-          <h2 class="section-title" style="font-size: 32px;">Congratulations!</h2>
-          <p class="content-text" style="font-size: 18px;">
-            You've completed the "{{ page.title }}" tutorial!
-          </p>
-          <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
-            <h3>You Earned:</h3>
-            <div style="font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); -webkit-background-clip: text; color: transparent;">
-              +{{ page.xp_reward }} XP
+      {% else %}
+        {% for i in (1..total_steps) %}
+          {% assign step_content = step_sections[i] %}
+          {% assign step_lines = step_content | split: '\n' %}
+          
+          {% comment %} Parse step header {% endcomment %}
+          {% assign step_header = step_lines[0] | strip %}
+          {% assign step_parts = step_header | split: ': ' %}
+          {% assign step_number = step_parts[0] | strip %}
+          {% assign step_title = step_parts[1] | default: 'Untitled Step' | strip %}
+          
+          {% comment %} Parse duration if exists {% endcomment %}
+          {% assign step_duration = '' %}
+          {% for line in step_lines %}
+            {% if line contains 'duration:' %}
+              {% assign duration_parts = line | split: 'duration:' %}
+              {% assign step_duration = duration_parts[1] | strip %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          
+          {% comment %} Extract body content {% endcomment %}
+          {% assign step_body = '' %}
+          {% assign content_started = false %}
+          {% for line in step_lines %}
+            {% if content_started %}
+              {% if line contains '---' %}
+                {% break %}
+              {% endif %}
+              {% assign step_body = step_body | append: line | append: '\n' %}
+            {% elsif line contains 'duration:' or line == step_header %}
+              {% continue %}
+            {% elsif line != '' %}
+              {% assign content_started = true %}
+              {% assign step_body = step_body | append: line | append: '\n' %}
+            {% endif %}
+          {% endfor %}
+          
+          <div class="tutorial-content {% if i == 1 %}active{% endif %}" data-step="{{ step_number }}">
+            <div class="tutorial-header">
+              {% if i == 1 %}
+                <div class="tutorial-meta">
+                  {% if page.difficulty %}
+                    <span class="difficulty-badge">{{ page.difficulty | escape }}</span>
+                  {% endif %}
+                  {% if page.duration %}
+                    <span class="duration-badge">⏱ {{ page.duration | escape }}</span>
+                  {% endif %}
+                  {% if page.rating %}
+                    <span class="rating">
+                      <span class="stars">
+                        {% for j in (1..page.rating) %}★{% endfor %}
+                      </span>
+                      {% if page.rating_count %}
+                        <span>({{ page.rating_count | number_with_delimiter }})</span>
+                      {% endif %}
+                    </span>
+                  {% endif %}
+                </div>
+                <h1 class="tutorial-title">{{ page.title | escape }}</h1>
+                {% if page.creator %}
+                  <div class="creator-info">
+                    <div class="creator-avatar">{{ page.creator | slice: 0 | upcase }}</div>
+                    <span class="creator-name">Created by <a href="#">{{ page.creator | escape }}</a></span>
+                  </div>
+                {% endif %}
+              {% else %}
+                <h1 class="tutorial-title">{{ step_title | escape }}</h1>
+              {% endif %}
+            </div>
+
+            <div class="content-body">
+              {{ step_body | markdownify }}
+              
+              <div class="complete-section">
+                {% if i == total_steps %}
+                  <button class="complete-button" onclick="completeStepAndFinish()">
+                    Complete this tutorial & earn {{ page.xp_reward | default: 0 }} XP
+                  </button>
+                {% else %}
+                  <button class="complete-button" onclick="completeStep()">
+                    Mark as Complete & Continue
+                  </button>
+                {% endif %}
+              </div>
             </div>
           </div>
-          <button class="nav-button next" onclick="window.location.href='/'">Back to Home →</button>
+        {% endfor %}
+        
+        <div class="tutorial-content" data-step="complete">
+          <div class="content-body" style="text-align: center; padding: 60px 40px;">
+            <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
+            <h2 class="section-title" style="font-size: 32px;">Congratulations!</h2>
+            <p class="content-text" style="font-size: 18px;">
+              You've completed the "{{ page.title | escape }}" tutorial!
+            </p>
+            <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
+              <h3>You Earned:</h3>
+              <div style="font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                +{{ page.xp_reward | default: 0 }} XP
+              </div>
+            </div>
+            <button class="nav-button next" onclick="window.location.href='{{ '/' | relative_url }}'">
+              Back to Home →
+            </button>
+          </div>
         </div>
-      </div>
+      {% endif %}
     </main>
   </div>
   
