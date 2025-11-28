@@ -7,26 +7,9 @@
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
   <script id="tutorial-config" type="application/json">
   {
-    "tutorialName": {{ page.tutorial_name | jsonify }},
-    "xpReward": {{ page.xp_reward | default: 100 }}
+    "tutorialName": {{ page.tutorial_name | jsonify }}
   }
   </script>
-  <style>
-    .tutorial-step {
-      display: none;
-    }
-    .tutorial-step.active {
-      display: block;
-    }
-    .step-navigation {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 2px solid #eee;
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-    }
-  </style>
 </head>
 <body>
   {% include header.html %}
@@ -82,16 +65,10 @@
       <div class="tutorial-step" data-step="complete" style="display: none;">
         <div style="text-align: center; padding: 60px 40px;">
           <div style="font-size: 72px; margin-bottom: 20px;">🎉</div>
-          <h2 style="font-size: 32px;">Congratulations!</h2>
+          <h2 style="font-size: 32px;">恭喜!</h2>
           <p style="font-size: 18px;">
-            You've completed the "{{ page.title | escape }}" tutorial!
+            您已经完成了 "{{ page.tutorial_name| escape }}" 教程!
           </p>
-          <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
-            <h3>You Earned:</h3>
-            <div style="font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-              +{{ page.xp_reward | default: 100 }} XP
-            </div>
-          </div>
           <button class="nav-button next" onclick="window.location.href='{{ '/' | relative_url }}'">
             Back to Home →
           </button>
@@ -173,7 +150,7 @@
         } else {
           const completeBtn = document.createElement('button');
           completeBtn.className = 'complete-button';
-          completeBtn.textContent = `Complete this tutorial & earn ${config.xpReward} XP`;
+          completeBtn.textContent = `完成该教程`;
           completeBtn.onclick = completeStepAndFinish;
           navDiv.appendChild(completeBtn);
         }
@@ -259,8 +236,6 @@
       // Show completion screen
       document.querySelector('[data-step="complete"]').style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      awardXP(config.xpReward);
     }
     
     function saveProgress(stepNum) {
@@ -308,12 +283,6 @@
           item.classList.add('active');
         }
       });
-    }
-    
-    function awardXP(xp) {
-      const currentXP = parseInt(localStorage.getItem('totalXP') || '0');
-      localStorage.setItem('totalXP', currentXP + xp);
-      console.log(`Awarded ${xp} XP! Total: ${currentXP + xp}`);
     }
   </script>
   
