@@ -11,13 +11,13 @@ title: "安卓教程"
     <h2 style="margin-bottom: 30px; font-size: 24px;">开始学习</h2>    
     <ol>
       <li>
-        <a href="{{ '/tutorials/set-up-android-studio/' | relative_url }}" class="nav-button next" style="display: inline-flex;">下载并安装 Android Studio →</a>
+        <a href="{{ '/tutorials/set-up-android-studio/' | relative_url }}" >下载并安装 Android Studio →</a>
       </li>
       <li>
-        <a href="{{ '/tutorials/your-first-application/' | relative_url }}" class="nav-button next" style="display: inline-flex;">您的第一个Android应用 →</a>
-      </li>
+        <a href="{{ '/tutorials/your-first-application/' | relative_url }}" >您的第一个Android应用 →</a>      
+        </li>
       <li>
-        <a href="{{ '/tutorials/text-view/' | relative_url }}" class="nav-button next" style="display: inline-flex;">文本组件 →</a>
+        <a href="{{ '/tutorials/text-view/' | relative_url }}" >文本组件 →</a>
       </li>
     </ol>
   </div>
