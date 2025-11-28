@@ -12,10 +12,19 @@ duration: "2 分钟"
 如需要在Android Studio中创建新的项目，请按照以下步骤操作：
 
 1. 双击Android Studio图标，打开Android Studio。
+
 ![Android Studio Logo]({{ '/assets/images/android-studio-logo.png' | relative_url }})
 
-2. 在欢迎界面，点击“Start a new Android Studio project”。
+2. 在欢迎界面，点击“Start a new Android Studio project”。或者从菜单中选择“File” > “New” > “New Project”。
+
+![Create New Project Dialog]({{ '/assets/images/new-project-by-menu.png' | relative_url }})
+
 3. 在“Create New Project”对话框中，选择“Empty Activity”项目模板。
-4. 输入项目名称，例如“MyFirstApp”。
+
+![新建项目模板对话框]({{ '/assets/images/new-project-template-dialog.png' | relative_url }})
+
+4. 输入项目名称，例如“HelloWorld”。
 5. 选择项目存储位置。
 6. 点击“Finish”创建项目。
+
+![新建项目配置对话框]({{ '/assets/images/new-project-setting-dialog.png' | relative_url }})
