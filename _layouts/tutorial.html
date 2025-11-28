@@ -86,9 +86,7 @@
       
       // Find all h2 elements that start with "Step"
       const allH2 = content.querySelectorAll('h2');
-      const stepHeaders = Array.from(allH2).filter(h2 => 
-        h2.textContent.trim().match(/^Step\s+\d+/i)
-      );
+      const stepHeaders = Array.from(allH2);
       
       if (stepHeaders.length === 0) {
         console.warn('No step headers found');
