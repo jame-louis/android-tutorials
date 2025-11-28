@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
   <!-- Inject config as JSON to satisfy linters -->
   <script id="tutorial-config" type="application/json">
-    {{ {"tutorialName": page.tutorial_name, "totalSteps": total_steps} | jsonify }}
+  {"tutorialName":"{{ page.tutorial_name | escape }}","totalSteps":{{ total_steps | default: 0 }}}
   </script>
   <script>
     window.tutorialConfig = JSON.parse(document.getElementById('tutorial-config').textContent);
