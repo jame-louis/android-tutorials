@@ -5,6 +5,7 @@ tutorial_name: set-up-android-studio
 difficulty: Beginner
 duration: 20 mins
 creator: jame louis 
+date: 2025-10-10
 ---
 
 ##  准备工作
