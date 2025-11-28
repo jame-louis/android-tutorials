@@ -17,7 +17,7 @@
   <div class="main-container">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
-        <h3>Course Progress</h3>
+        <h3>教程进度</h3>
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill"></div>
         </div>
@@ -58,7 +58,7 @@
         {% endif %}
       </div>
 
-      <div id="tutorial-content">
+      <div class="content-body" id="tutorial-content">
         {{ content }}
       </div>
 
@@ -133,7 +133,7 @@
         if (index > 0) {
           const prevBtn = document.createElement('button');
           prevBtn.className = 'nav-button prev';
-          prevBtn.textContent = '← Previous Step';
+          prevBtn.textContent = '← 上一步';
           prevBtn.onclick = () => showStep(index);
           navDiv.appendChild(prevBtn);
         } else {
@@ -144,7 +144,7 @@
         if (index < stepHeaders.length - 1) {
           const nextBtn = document.createElement('button');
           nextBtn.className = 'complete-button';
-          nextBtn.textContent = 'Mark as Complete & Continue →';
+          nextBtn.textContent = '标志完成并继续下一步 →';
           nextBtn.onclick = () => completeStep(index + 1);
           navDiv.appendChild(nextBtn);
         } else {
@@ -265,7 +265,7 @@
       
       const percentage = (completed.length / config.totalSteps) * 100;
       progressFill.style.width = percentage + '%';
-      progressText.textContent = `${completed.length} of ${config.totalSteps} completed`;
+      progressText.textContent = `${completed.length} of ${config.totalSteps} 已完成✅`;
       
       // Update sidebar
       document.querySelectorAll('.step-item').forEach(item => {
