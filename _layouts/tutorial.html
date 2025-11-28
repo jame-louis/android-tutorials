@@ -1,6 +1,7 @@
-{% comment %} _layouts/tutorial.html - TOP OF FILE {% endcomment %}
-{% assign steps = site.tutorials | where: "tutorial_name", page.tutorial_name | where: "type", "step" | sort: "order" %}
-{% assign total_steps = steps.size %}
+{% comment %} Parse steps from single markdown file {% endcomment %}
+{% assign raw_content = page.content %}
+{% assign step_sections = raw_content | split: '## Step ' %}
+{% assign total_steps = step_sections.size | minus: 1 %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +13,7 @@
   <script>
     window.tutorialConfig = {
       tutorialName: '{{ page.tutorial_name }}',
-      totalSteps: '{{ total_steps }}',
+      totalSteps: {{ total_steps }}
     };
   </script>
 </head>
@@ -23,46 +24,70 @@
     {% include sidebar.html %}
     
     <main class="content-area">
-      {% for step in steps %}
-      <div class="tutorial-content" data-step="{{ step.order }}">
-        <div class="tutorial-header">
-          {% if forloop.first %}
-          <div class="tutorial-meta">
-            <span class="difficulty-badge">{{ page.difficulty }}</span>
-            <span class="duration-badge">⏱ {{ page.duration }}</span>
-            <span class="rating">
-              <span class="stars">{{ '★' | times: page.rating }}</span>
-              <span>({{ page.rating_count | default: 0 | number_with_delimiter }})</span>
-            </span>
-          </div>
-          <h1 class="tutorial-title">{{ page.title }}</h1>
-          <div class="creator-info">
-            <div class="creator-avatar">U</div>
-            <span class="creator-name">Created by <a href="#">{{ page.creator }}</a></span>
-          </div>
-          {% else %}
-          <h1 class="tutorial-title">{{ step.title }}</h1>
+      {% for i in (1..total_steps) %}
+        {% assign step_content = step_sections[i] %}
+        {% assign step_lines = step_content | split: newline %}
+        {% assign step_header = step_lines[0] %}
+        {% assign duration_line = step_lines[1] %}
+        
+        {% comment %} Extract step number and title {% endcomment %}
+        {% assign step_parts = step_header | split: ': ' %}
+        {% assign step_number = step_parts[0] %}
+        {% assign step_title = step_parts[1] %}
+        
+        {% comment %} Extract duration {% endcomment %}
+        {% assign duration_parts = duration_line | split: 'duration: ' %}
+        {% assign step_duration = duration_parts[1] %}
+        
+        {% comment %} Get content without header lines {% endcomment %}
+        {% assign content_start = 3 %}
+        {% assign step_body = '' %}
+        {% for line in step_lines offset: content_start %}
+          {% if line contains '---' %}
+            {% break %}
           {% endif %}
-        </div>
+          {% assign step_body = step_body | append: line | append: newline %}
+        {% endfor %}
+        
+        <div class="tutorial-content" data-step="{{ step_number }}">
+          <div class="tutorial-header">
+            {% if i == 1 %}
+              <div class="tutorial-meta">
+                <span class="difficulty-badge">{{ page.difficulty }}</span>
+                <span class="duration-badge">⏱ {{ page.duration }}</span>
+                <span class="rating">
+                  <span class="stars">{{ '★' | times: page.rating }}</span>
+                  <span>({{ page.rating_count | default: 0 | number_with_delimiter }})</span>
+                </span>
+              </div>
+              <h1 class="tutorial-title">{{ page.title }}</h1>
+              <div class="creator-info">
+                <div class="creator-avatar">U</div>
+                <span class="creator-name">Created by <a href="#">{{ page.creator }}</a></span>
+              </div>
+            {% else %}
+              <h1 class="tutorial-title">{{ step_title }}</h1>
+            {% endif %}
+          </div>
 
-        <div class="content-body">
-          {{ step.content | markdownify }}
-          
-          {% if forloop.last %}
-          <div class="complete-section">
-            <button class="complete-button" onclick="completeStepAndFinish()">
-              Complete this tutorial & earn {{ page.xp_reward }} XP
-            </button>
+          <div class="content-body">
+            {{ step_body | markdownify }}
+            
+            {% if i == total_steps %}
+              <div class="complete-section">
+                <button class="complete-button" onclick="completeStepAndFinish()">
+                  Complete this tutorial & earn {{ page.xp_reward }} XP
+                </button>
+              </div>
+            {% else %}
+              <div class="complete-section">
+                <button class="complete-button" onclick="completeStep()">
+                  Mark as Complete & Continue
+                </button>
+              </div>
+            {% endif %}
           </div>
-          {% else %}
-          <div class="complete-section">
-            <button class="complete-button" onclick="completeStep()">
-              Mark as Complete & Continue
-            </button>
-          </div>
-          {% endif %}
         </div>
-      </div>
       {% endfor %}
       
       <div class="tutorial-content" data-step="complete">
