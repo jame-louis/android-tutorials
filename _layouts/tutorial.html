@@ -1,7 +1,19 @@
 {% comment %} Parse steps from single markdown file {% endcomment %}
 {% assign raw_content = page.content %}
+
+{% comment %} Split by "## Step" to get all steps {% endcomment %}
 {% assign step_sections = raw_content | split: '## Step ' %}
-{% assign total_steps = step_sections.size | minus: 1 %}
+{% assign total_steps = 0 %}
+
+{% comment %} Count valid steps (those that start with a number) {% endcomment %}
+{% for section in step_sections %}
+  {% if section contains ':' %}
+    {% assign first_char = section | slice: 0, 1 %}
+    {% if first_char >= '0' and first_char <= '9' %}
+      {% assign total_steps = total_steps | plus: 1 %}
+    {% endif %}
+  {% endif %}
+{% endfor %}
 
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: 'en' }}">
@@ -13,8 +25,8 @@
   <script id="tutorial-config" type="application/json">
   {
     "tutorialName": {{ page.tutorial_name | jsonify }},
-    "totalSteps": {{ total_steps | default: 0 }},
-    "xpReward": {{ page.xp_reward | default: 0 }}
+    "totalSteps": {{ total_steps }},
+    "xpReward": {{ page.xp_reward | default: 100 }}
   }
   </script>
   <script>
@@ -47,48 +59,40 @@
         <div class="error-message">
           <h2>No Tutorial Steps Found</h2>
           <p>Please format your content with "## Step N: Title" headers.</p>
+          <p>Example: <code>## Step 1: Getting Started</code></p>
         </div>
       {% else %}
-        {% for i in (1..total_steps) %}
-          {% assign step_content = step_sections[i] %}
-          {% assign step_lines = step_content | split: '\n' %}
+        {% assign step_counter = 0 %}
+        {% for section in step_sections %}
+          {% comment %} Skip the first empty section before first step {% endcomment %}
+          {% if section == '' or section == step_sections.first %}
+            {% continue %}
+          {% endif %}
           
-          {% comment %} Parse step header {% endcomment %}
-          {% assign step_header = step_lines[0] | strip %}
-          {% assign step_parts = step_header | split: ': ' %}
-          {% assign step_number = step_parts[0] | strip %}
-          {% assign step_title = step_parts[1] | default: 'Untitled Step' | strip %}
+          {% comment %} Check if this is a valid step (starts with number and colon) {% endcomment %}
+          {% assign first_line = section | split: '\n' | first | strip %}
+          {% assign first_char = first_line | slice: 0, 1 %}
+          {% unless first_char >= '0' and first_char <= '9' %}
+            {% continue %}
+          {% endunless %}
           
-          {% comment %} Parse duration if exists {% endcomment %}
-          {% assign step_duration = '' %}
-          {% for line in step_lines %}
-            {% if line contains 'duration:' %}
-              {% assign duration_parts = line | split: 'duration:' %}
-              {% assign step_duration = duration_parts[1] | strip %}
-              {% break %}
-            {% endif %}
-          {% endfor %}
+          {% assign step_counter = step_counter | plus: 1 %}
           
-          {% comment %} Extract body content {% endcomment %}
+          {% comment %} Parse step number and title {% endcomment %}
+          {% assign colon_index = first_line | split: ':' %}
+          {% assign step_number = colon_index[0] | strip %}
+          {% assign step_title = colon_index[1] | strip %}
+          
+          {% comment %} Get remaining content after first line {% endcomment %}
+          {% assign section_lines = section | split: '\n' %}
           {% assign step_body = '' %}
-          {% assign content_started = false %}
-          {% for line in step_lines %}
-            {% if content_started %}
-              {% if line contains '---' %}
-                {% break %}
-              {% endif %}
-              {% assign step_body = step_body | append: line | append: '\n' %}
-            {% elsif line contains 'duration:' or line == step_header %}
-              {% continue %}
-            {% elsif line != '' %}
-              {% assign content_started = true %}
-              {% assign step_body = step_body | append: line | append: '\n' %}
-            {% endif %}
+          {% for line in section_lines offset: 1 %}
+            {% assign step_body = step_body | append: line | append: '\n' %}
           {% endfor %}
           
-          <div class="tutorial-content {% if i == 1 %}active{% endif %}" data-step="{{ step_number }}">
+          <div class="tutorial-content {% if step_counter == 1 %}active{% endif %}" data-step="{{ step_number }}">
             <div class="tutorial-header">
-              {% if i == 1 %}
+              {% if step_counter == 1 %}
                 <div class="tutorial-meta">
                   {% if page.difficulty %}
                     <span class="difficulty-badge">{{ page.difficulty | escape }}</span>
@@ -115,7 +119,7 @@
                   </div>
                 {% endif %}
               {% else %}
-                <h1 class="tutorial-title">{{ step_title | escape }}</h1>
+                <h1 class="tutorial-title">Step {{ step_number }}: {{ step_title | escape }}</h1>
               {% endif %}
             </div>
 
@@ -123,9 +127,9 @@
               {{ step_body | markdownify }}
               
               <div class="complete-section">
-                {% if i == total_steps %}
+                {% if step_counter == total_steps %}
                   <button class="complete-button" onclick="completeStepAndFinish()">
-                    Complete this tutorial & earn {{ page.xp_reward | default: 0 }} XP
+                    Complete this tutorial & earn {{ page.xp_reward | default: 100 }} XP
                   </button>
                 {% else %}
                   <button class="complete-button" onclick="completeStep()">
@@ -147,7 +151,7 @@
             <div style="background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%); padding: 30px; border-radius: 16px; margin: 30px 0;">
               <h3>You Earned:</h3>
               <div style="font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                +{{ page.xp_reward | default: 0 }} XP
+                +{{ page.xp_reward | default: 100 }} XP
               </div>
             </div>
             <button class="nav-button next" onclick="window.location.href='{{ '/' | relative_url }}'">
@@ -158,7 +162,6 @@
       {% endif %}
     </main>
   </div>
-  
   <script src="{{ '/assets/js/tutorial.js' | relative_url }}"></script>
 </body>
 </html>
