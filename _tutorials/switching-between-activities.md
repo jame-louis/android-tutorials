@@ -49,7 +49,6 @@ date: 2025-11-29
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:onClick="onClickLogin"
     tools:context=".MainActivity">
 
     <EditText
@@ -146,3 +145,52 @@ public class MainActivity extends AppCompatActivity {
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
+```
+## Intent
+
+现在，我们已经设计了第二个活动组件，加上已有的主活动组件，那么我们怎么才能从主活动组件切换到第二个活动组件呢？答案是使用 Intent。
+
+### 什么是 Intent？
+
+Intent 是 Android 中用于在不同组件之间进行通信的一种机制。它可以用于启动活动、服务、广播接收器等。在我们的例子中，我们将使用 Intent 来启动第二个活动组件。
+
+### Intent 类型
+
+Intent 可以分为两种类型：显式 Intent 和隐式 Intent。
+
+- 显式 Intent：指定要启动的组件的名称。
+- 隐式 Intent：不指定要启动的组件的名称，而是根据组件的行为来确定要启动的组件。
+
+### 显式 Intent
+
+显式 Intent 是指在 Intent 中指定要启动的组件的名称。在我们的例子中，我们将使用显式 Intent 来启动第二个活动组件。
+
+```java
+Intent intent = new Intent(this, SecondActivity.class);
+startActivity(intent);
+```
+
+- `this` 表示当前活动组件的上下文。即当前活动组件的实例。
+- `SecondActivity.class` 表示要启动的活动组件的类名。
+- `startActivity(intent)` 表示启动活动组件。
+
+### 集成显式 Intent 到主活动组件
+
+- 在 `MainActivity.java` 中，添加一个 `onClickLogin` 方法，用于处理登录按钮的点击事件。
+- 在 `onClickLogin` 方法中，创建一个 `Intent` 对象，指定要启动的组件为 `SecondActivity.class`。
+- 调用 `startActivity(intent)` 方法启动第二个活动组件。
+
+```java
+public void onClickLogin(View view) {
+    EditText editTextName = findViewById(R.id.edittext_name_main);
+    String name = editTextName.getText().toString();
+    Toast.makeText(this, "你好，" + name, Toast.LENGTH_SHORT).show();
+
+    Intent intent = new Intent(this, SecondActivity.class);
+    startActivity(intent);
+}
+```
+
+### 运行应用
+
+![运行应用]({{ '/assets/images/run-app-switching-activity-2.gif' | relative_url }})
