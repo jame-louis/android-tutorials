@@ -41,7 +41,7 @@ exclude:
 giscus:
   enabled: true
   repo: "jame-louis/android-tutorials"
-  repo_id: "R_kgDOQd_G4gj"
+  repo_id: "R_kgDOQd_G4g"
   category: "Announcements"
   category_id: "DIC_kwDOQd_G4s4CzLNI"
   mapping: "url"
