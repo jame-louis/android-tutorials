@@ -610,3 +610,15 @@
     max-width: 800px;
     margin: 0 auto;
 }
+
+.views {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.visitors {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
