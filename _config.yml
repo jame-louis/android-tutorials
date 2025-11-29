@@ -44,7 +44,7 @@ giscus:
   repo_id: "R_kgDOQd_G4gj"
   category: "Announcements"
   category_id: "DIC_kwDOQd_G4s4CzLNI"
-  mapping: "pathname"
+  mapping: "url"
   strict: "0"
   reactions_enabled: "1"
   emit_metadata: "0"
