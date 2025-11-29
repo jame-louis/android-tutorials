@@ -1,0 +1,23 @@
+{% if site.giscus.enabled %}
+<div class="comments-section" style="margin-top: 60px; padding-top: 40px; border-top: 1px solid rgba(0,0,0,0.1);">
+  <h3 style="margin-bottom: 20px;">Discussion</h3>
+  <p style="margin-bottom: 20px;">Have questions or feedback? Leave a comment below!</p>
+  
+  <script src="https://giscus.app/client.js"
+          data-repo="{{ site.giscus.repo }}"
+          data-repo-id="{{ site.giscus.repo_id }}"
+          data-category="{{ site.giscus.category }}"
+          data-category-id="{{ site.giscus.category_id }}"
+          data-mapping="{{ site.giscus.mapping }}"
+          data-strict="{{ site.giscus.strict }}"
+          data-reactions-enabled="{{ site.giscus.reactions_enabled }}"
+          data-emit-metadata="{{ site.giscus.emit_metadata }}"
+          data-input-position="{{ site.giscus.input_position }}"
+          data-theme="{{ site.giscus.theme }}"
+          data-lang="{{ site.giscus.lang }}"
+          data-loading="{{ site.giscus.loading }}"
+          crossorigin="anonymous"
+          async>
+  </script>
+</div>
+{% endif %}

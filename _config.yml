@@ -36,3 +36,19 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+  
+  # _config.yml
+giscus:
+  enabled: true
+  repo: "jame-louis/android-tutorials"
+  repo_id: "R_kgDOQd_G4gj"
+  category: "Q&A"
+  category_id: "DIC_kwDOQd_G4s4CzLNI"
+  mapping: "pathname"
+  strict: "0"
+  reactions_enabled: "1"
+  emit_metadata: "0"
+  input_position: "bottom"
+  theme: "light"
+  lang: "en"
+  loading: "lazy"
