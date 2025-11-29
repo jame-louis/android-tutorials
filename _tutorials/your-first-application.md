@@ -94,10 +94,31 @@ Gradle's dependency cache may be corrupt (this sometimes occurs after a network 
   - Component Tree：组件树视图，显示应用的组件层级关系。
   - Attributes：属性视图，显示选中组件的属性信息。
 
-![Logcat]({{ '/assets/images/logcat.png' | relative_url }})
+![Logcat]({{ '/assets/images/logcat-view.png' | relative_url }})
 
 - 日志cat（Logcat）：显示应用运行时的日志信息。
   - 过滤选项：用于筛选显示的日志信息，如按标签（Tag）、优先级（Priority）等。
+
+## 安装模拟器
+
+有两种方式可以安装模拟器：官方模拟器和第三方模拟器。
+
+### 安装官方模拟器
+
+- 在Android Studio中，点击工具栏上的“AVD Manager”按钮（黄色的AVD图标）。
+- 在AVD Manager中，点击“Create Virtual Device”。
+- 选择一个设备定义（如Pixel 4），点击“Next”。
+- 选择一个系统镜像（如Android 11.0），点击“Next”。
+- 配置虚拟机的设置（如内存大小、存储大小等），点击“Finish”。
+- 您现在可以在AVD Manager中启动模拟器。
+
+### 安装第三方模拟器（以夜神模拟器为例）
+
+- [下载夜神模拟器](https://www.yeshen.com/)
+- 安装夜神模拟器。
+- 启动夜神模拟器。
+
+![夜神模拟器]({{ '/assets/images/third-android-emulator.png' | relative_url }})
 
 ## 运行应用
 
