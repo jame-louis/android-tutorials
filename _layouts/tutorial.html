@@ -48,8 +48,10 @@
               {% endif %}
             </span>
           {% endif %}
-          本文总阅读量 <span id="busuanzi_page_pv"></span> 次
-          本文总访客量 <span id="busuanzi_page_uv"></span> 人
+          <img src="{{ '/assets/images/eye-line.png' | relative_url }}" alt="阅读量" style="width: 20px; height: 20px; margin-right: 5px;">
+          <span id="busuanzi_page_pv"></span>次
+          <img src="{{ '/assets/images/group-line.png' | relative_url }}" alt="访客量" style="width: 20px; height: 20px; margin-right: 5px;">
+          <span id="busuanzi_page_uv"></span>人
         </div>
         <h1 class="tutorial-title">{{ page.title | escape }}</h1>
         {% if page.creator %}

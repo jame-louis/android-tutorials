@@ -11,7 +11,7 @@
   
   <div class="tutorial-steps" id="tutorialSteps">
     {% for step in steps %}
-    <div class="step-item {% if step.order == 1 %}active{% endif %}" data-step="{{ step.order }}" onclick="showStep({{ step.order }})">
+    <div class="step-item {% if step.url == page.url %}active{% endif %}" data-step="{{ step.order }}" onclick="window.location.href='{{ step.url | relative_url }}'"></div>
       <div class="step-number">{{ step.order }}</div>
       <div class="step-title">{{ step.title }}</div>
     </div>
