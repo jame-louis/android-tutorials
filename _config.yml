@@ -42,7 +42,7 @@ giscus:
   enabled: true
   repo: "jame-louis/android-tutorials"
   repo_id: "R_kgDOQd_G4gj"
-  category: "Q&A"
+  category: "Announcements"
   category_id: "DIC_kwDOQd_G4s4CzLNI"
   mapping: "pathname"
   strict: "0"
@@ -50,5 +50,5 @@ giscus:
   emit_metadata: "0"
   input_position: "bottom"
   theme: "light"
-  lang: "en"
+  lang: "zh-CN"
   loading: "lazy"
