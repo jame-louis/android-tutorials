@@ -5,12 +5,13 @@ tutorial_name: your-first-application
 difficulty: Beginner
 duration: 20 mins
 creator: jame louis
+date: 2025-10-20
 ---
 
 ## 准备工作
 
 在计算机安装 Android Studio 4.1.1。确保您的计算机符合运行 Android Studio 的最低要求。
-如果您需要有关设置过程的更详细说明，请参阅[下载并安装 Android Studio]({{ '/tutorials/set-up-android-studio/' | relative_url }})。
+如果您需要有关设置过程的更详细说明，请参阅[下载并安装 Android Studio]({{ '/tutorials/set-up-android-studio' | relative_url }})。
 
 在此教程中，您将使用Android Studio提供的项目模板创建自己的首个Android应用。
 

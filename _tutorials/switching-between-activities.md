@@ -194,3 +194,325 @@ public void onClickLogin(View view) {
 ### 运行应用
 
 ![运行应用]({{ '/assets/images/run-app-switching-activity-2.gif' | relative_url }})
+
+### MainActivity.java
+
+完整代码如下：
+
+```java
+package com.example.switchingactivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void onClickLogin(View view) {
+        EditText editTextName = findViewById(R.id.edittext_name_main);
+        String name = editTextName.getText().toString();
+        Toast.makeText(this, "你好，" + name, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivity(intent);
+    }
+}
+```
+
+## 页面切换并传递数据
+
+上一步中，我们成功切换到了第二个活动组件。但是，我们在第一个活动组件中输入的用户名，在第二个活动组件中是看不到的。那么，我们该如何在页面切换时传递数据呢？
+
+Intent 提供了一种机制，即可以在 Intent 中添加额外的数据，以便在目标组件中使用。
+
+### 传递数据
+
+- 在 `onClickLogin` 方法中，创建一个 `Intent` 对象，指定要启动的组件为 `SecondActivity.class`。
+- 调用 `putExtra` 方法，将用户名添加到 Intent 中。
+- 调用 `startActivity(intent)` 方法启动第二个活动组件。
+
+```java
+// MainActivity.java
+public void onClickLogin(View view) {
+    EditText editTextName = findViewById(R.id.edittext_name_main);
+    String name = editTextName.getText().toString();
+    Toast.makeText(this, "你好，" + name, Toast.LENGTH_SHORT).show();
+
+    Intent intent = new Intent(this, SecondActivity.class);
+    intent.putExtra("name", name);
+    startActivity(intent);
+}
+```
+
+### 接收数据
+
+- 在 `SecondActivity.java` 中，添加一个 `onCreate` 方法，用于接收传递过来的数据。
+- 调用 `getIntent()` 方法获取启动当前活动组件的 Intent 对象。
+- 调用 `getStringExtra("name")` 方法获取传递过来的用户名。
+- 在 `textview_name_second` 中显示用户名。
+
+```java
+package com.example.switchingactivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.TextView;
+
+public class SecondActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+
+        TextView textViewName = findViewById(R.id.textview_name_second);
+        textViewName.setText("你好，" + name);
+    }
+}
+```
+
+### 运行应用
+
+![运行应用]({{ '/assets/images/run-app-switching-activity-3.gif' | relative_url }})
+
+
+## 页面切换并返回数据
+
+### StartActivityForResult
+
+- 定义一个常量 `REQUEST_CODE`，用于标识请求码。
+- 调用 `startActivityForResult(intent, REQUEST_CODE)` 方法启动第二个活动组件。
+
+
+```java
+// MainActivity.java
+public final int REQUEST_CODE = 100;
+
+public void onClickLogin(View view) {
+    EditText editTextName = findViewById(R.id.edittext_name_main);
+    String name = editTextName.getText().toString();
+    Toast.makeText(this, "你好，" + name, Toast.LENGTH_SHORT).show();
+
+    Intent intent = new Intent(this, SecondActivity.class);
+    intent.putExtra("name", name);
+    startActivityForResult(intent, REQUEST_CODE);
+}
+```
+### setResult
+
+- 在 `SecondActivity.java` 中，添加一个 `onClickBack` 方法，用于处理返回按钮的点击事件。
+- 在 `onClickBack` 方法中，创建一个 `Intent` 对象，指定要启动的组件为 `MainActivity.class`。
+- 调用 `setResult(RESULT_OK, intent)` 方法设置返回结果为成功，并将 Intent 传递给调用方。
+- 调用 `finish()` 方法关闭当前活动组件。
+
+```java
+// SecondActivity.java
+public void onClickBack(View view) {
+    Intent intent = new Intent(this, MainActivity.class);
+    intent.putExtra("msg", "hello main activity from second activity");
+    setResult(RESULT_OK, intent);
+    finish();
+}
+```
+
+### 处理返回结果
+
+- 在 `MainActivity.java` 中，添加一个 `onActivityResult` 方法，用于处理第二个活动组件返回的结果。
+- 检查请求码是否与 `REQUEST_CODE` 匹配。
+- 检查结果码是否为 `RESULT_OK`。
+- 从 Intent 中获取传递回来的消息。
+- 使用 `Toast` 显示消息。
+
+```java
+// MainActivity.java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+        String name = data.getStringExtra("name");
+        String msg = data.getStringExtra("msg");
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+}
+```
+
+### 运行应用
+
+![运行应用]({{ '/assets/images/run-app-switching-activity-4.gif' | relative_url }})
+
+## 主要文件内容
+
+### MainActivity.java
+
+```java
+package com.example.switchingactivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
+
+public class MainActivity extends AppCompatActivity {
+    public final int REQUEST_CODE = 100;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
+            String msg = data.getStringExtra("msg");
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void onClickLogin(View view) {
+        EditText editTextName = findViewById(R.id.edittext_name_main);
+        String name = editTextName.getText().toString();
+        Toast.makeText(this, "你好，" + name, Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, SecondActivity.class);
+        intent.putExtra("name", name);
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+}
+```
+
+### activity_main.xml
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/edittext_name_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="张三"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="onClickLogin"
+        android:text="登入"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edittext_name_main" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+### SecondActivity.java
+
+```java
+package com.example.switchingactivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+
+public class SecondActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
+
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+
+        TextView textViewName = findViewById(R.id.textview_name_second);
+        textViewName.setText("你好，" + name);
+    }
+
+    public void onClickBack(View v) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("msg", "hello main activity from second activity");
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+}
+```
+
+### activity_second.xml
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SecondActivity">
+
+    <TextView
+        android:id="@+id/textview_name_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="第二个活动组件"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:onClick="onClickBack"
+        android:text="返回"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textview_name_second" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+
+## 总结
+
+- 通过Intent和StartAcitivity切换活动组件。
+- 通过Intent传递数据和接收返回结果。
+- 通过StartActivityForResult切换活动组件并通过onActivityResult接收返回结果。
+- 通过setResult设置返回结果。
