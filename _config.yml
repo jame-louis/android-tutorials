@@ -21,6 +21,24 @@ sass:
   sass_dir: _sass
   style: compressed
 
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
+      start_line: 1
+    span:
+      line_numbers: false
+  auto_ids: true
+  footnote_nr: 1
+
+# For GitHub Pages users
+gems:
+  - rouge
+
 # Plugins
 plugins:
   - jekyll-feed
