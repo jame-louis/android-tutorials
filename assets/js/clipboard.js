@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 添加点击事件
     button.addEventListener('click', function() {
       // 获取代码文本（排除行号）
-      const code = block.querySelector('code') || block;
+      const code = block.querySelector('.rouge-code') || block;
       const text = code.innerText || code.textContent;
       
       // 复制到剪贴板
