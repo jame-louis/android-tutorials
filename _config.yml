@@ -35,6 +35,13 @@ kramdown:
   auto_ids: true
   footnote_nr: 1
 
+responsive_image:
+  template: _includes/responsive-image.html
+  sizes:
+    - width: 320
+    - width: 480
+    - width: 800
+
 # For GitHub Pages users
 gems:
   - rouge
@@ -44,6 +51,7 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
   - jekyll-seo-tag
+  - jekyll-responsive-image
 
 # Exclude from processing
 exclude:
