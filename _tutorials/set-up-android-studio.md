@@ -35,7 +35,5 @@ Android Studio 是 Google 提供的官方 IDE，用于开发 Android 应用。�
 - Android Gradle Plugin version: 4.1.1
 - Gradle version: 6.5
 
-{% responsive_image path: assets/images/android-studio-logo.png 
-                     alt: "Android Studio Logo" 
-                     class: "img-center" 
-                     title: "Android Studio Logo" %}
+
+{% picture android-studio-logo.png --alt Android Studio Logo %}
