@@ -301,6 +301,7 @@
       const sidebar = document.getElementById('sidebar');
       const printButton = document.querySelector('.print-button');
       const stepNavigations = document.querySelectorAll('.step-navigation');
+      const tutorialSteps = document.querySelectorAll('.tutorial-step');
       
       // 保存原始状态
       const originalStyles = {
@@ -308,10 +309,16 @@
         printButton: printButton.style.display
       };
       
+      // 保存当前活跃的步骤
+      const activeStep = document.querySelector('.tutorial-step.active');
+      
       // 隐藏元素
       sidebar.style.display = 'none';
       printButton.style.display = 'none';
       stepNavigations.forEach(nav => nav.style.display = 'none');
+      
+      // 临时显示所有教程步骤
+      tutorialSteps.forEach(step => step.style.display = 'block');
       
       // 调用浏览器打印功能
       window.print();
@@ -321,6 +328,12 @@
         sidebar.style.display = originalStyles.sidebar;
         printButton.style.display = originalStyles.printButton;
         stepNavigations.forEach(nav => nav.style.display = 'block');
+        
+        // 恢复活跃步骤状态
+        tutorialSteps.forEach(step => step.style.display = 'none');
+        if (activeStep) {
+          activeStep.style.display = 'block';
+        }
       }, 100);
     }
   </script>
