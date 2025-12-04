@@ -510,7 +510,196 @@ public class MainActivity extends AppCompatActivity {
 
 ### 效果
 
-![ListView]({{ '/assets/images/list-view.png' | relative_url }})
+![ListView]({{ '/assets/images/list-view.gif' | relative_url }})
 
 
+## 自定义 Adapter
+
+到此，我们已经完成了 ListView 的基本用法。如果我们需要显示更多的信息，比如“城市照片”，我们可以自定义 Adapter。
+
+### CityData
+
+- 新增CityInfo类，用于存储城市信息，比如城市名称、照片等。
+- getSampleCityInfos() 方法，返回一个包含多个 CityInfo 对象的列表。
+
+```java
+public class CityData {
+
+    public static class CityInfo {
+        int drawableId;
+        String name;
+
+        CityInfo(int id, String name) {
+            drawableId = id;
+            this.name = name;
+        }
+    };
+
+    public static List<CityInfo> getSampleCityInfos() {
+        return Arrays.asList(
+                new CityInfo(R.drawable.a, "北京"),
+                new CityInfo(R.drawable.b, "上海"),
+                new CityInfo(R.drawable.c, "广州"),
+                new CityInfo(R.drawable.d, "深圳")
+        );
+    }
+    /* 其他代码 */
+}
+```
+### 新增布局文件
+
+- 新增city_with_image.xml布局文件，用于显示城市照片和名称。
+- 布局文件中包含一个 ImageView 用于显示照片，一个 TextView 用于显示名称。
+    - 约束布局 ConstraintLayout, Height 为 200dp
+    - ImageView 的 ID 为 city_image
+    - TextView 的 ID 为 city_name
+
+![city with image]({{ '/assets/images/city-with-image.png' | relative_url }})
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <ImageView
+        android:id="@+id/city_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/a" />
+
+    <TextView
+        android:id="@+id/city_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="城市名称"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/city_image"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+### CustomAdapter
+
+- 新增CustomAdapter类，继承自BaseAdapter。
+- 构造函数，接收上下文、布局资源 ID、数据列表作为参数。
+- getView() 方法，用于创建列表项视图。
+- 其他必要的方法，如 getCount()、getItem() 等。
+
+```java
+package com.example.listview;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.List;
+
+public class CustomAdapter extends BaseAdapter {
+
+    private Context context;
+    private List<CityData.CityInfo> datas;
+
+    public CustomAdapter(Context context,  List<CityData.CityInfo> objects) {
+        this.context = context;
+        this.datas = objects;
+    }
+
+    @Override
+    public int getCount() {
+        return datas.size();
+    }
+
+    @Override
+    public Object getItem(int position) {
+        return datas.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.city_with_image, parent, false);
+        }
+
+        ImageView imageView = convertView.findViewById(R.id.city_image);
+        TextView textView = convertView.findViewById(R.id.city_name);
+
+        CityData.CityInfo cityInfo = datas.get(position);
+        imageView.setImageResource(cityInfo.drawableId);
+
+        textView.setText(cityInfo.name);
+
+        return convertView;
+    }
+}
+```
+
+### MainActivity
+
+- 在 MainActivity 中，使用 CustomAdapter 来设置 ListView 的适配器。
+- 确保在 AndroidManifest.xml 中注册 MainActivity。
+
+```java
+package com.example.listview;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    private List<String> cities = CityData.getAllCities();
+    private List<CityData.CityInfo> cityInfos = CityData.getSampleCityInfos();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ListView listView = findViewById(R.id.city_list);
+        CustomAdapter ca = new CustomAdapter(this, cityInfos);
+        listView.setAdapter(ca);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                CityData.CityInfo cityInfo = (CityData.CityInfo)ca.getItem(position);
+                String city = cityInfo.name;
+                Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
+```
+
+### 运行结果
+
+![list-view-custom-adapter]({{ '/assets/images/list-view-custom-adapter.png' | relative_url }})
+
+## 总结
+
+- 如何创建和配置列表视图
+- 如何在列表视图中显示数据
+- 如何处理列表项的点击事件
 
