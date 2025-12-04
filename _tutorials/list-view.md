@@ -41,7 +41,7 @@ date: 2025-10-25
     - 设置TextView的TextSize为30sp；
     - 设置TextView的Gravity为Center；
 
-![4个城市的列表]({{ '/assets/manual-fake-list-view.png' | relative_url }})
+![4个城市的列表]({{ '/assets/images/manual-fake-list-view.png' | relative_url }})
 
 那么，我们的列表就显示出来了。
 
@@ -105,7 +105,7 @@ date: 2025-10-25
 
 ### 显示更多城市
 
-![重构布局]({{ '/assets/manual-fake-list-view-refactored.png' | relative_url }})
+![重构布局]({{ '/assets/images/manual-fake-list-view-refactored.png' | relative_url }})
 
 首先，我们先重构一下布局文件。
 - 移除4个TextView。
@@ -172,18 +172,18 @@ public class MainActivity extends AppCompatActivity {
 
 最后，运行应用，我们就可以看到4个城市都被显示出来了。
 
-![4个城市的列表]({{ '/assets/4-cities.png' | relative_url }})
+![4个城市的列表]({{ '/assets/images/4-cities.png' | relative_url }})
 
 为了显示更多的城市，我们可以将CityData.getSampleCities()替换为CityData.getAllCities()。
 运行应用，我们就可以看到343个城市都被显示出来了。
 
-![343个城市的列表]({{ '/assets/all-cities.png' | relative_url }})
+![343个城市的列表]({{ '/assets/images/all-cities.png' | relative_url }})
 
 但是，我们发现无法滚动查看所有的城市。这是因为LinearLayout默认是不支持滚动的。
 
 为了解决这个问题，我们可以将添加ScrollView组件到布局文件中，将LinearLayout作为ScrollView的子组件。
 
-![all-cities-with-scroll-view]({{ '/assets/all-cities-with-scroll-view.png' | relative_url }})
+![all-cities-with-scroll-view]({{ '/assets/images/all-cities-with-scroll-view.png' | relative_url }})
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
 最终的效果如下：
 
-![所有城市的列表]({{ '/assets/all-cities-with-scroll-view.gif' | relative_url }})
+![所有城市的列表]({{ '/assets/images/all-cities-with-scroll-view.gif' | relative_url }})
 
 ### 添加点击事件
 
@@ -238,7 +238,7 @@ for(String city : cities) {
 }
 ```
 
-![所有城市的列表]({{ '/assets/all-cities-with-scroll-view-and-event.gif' | relative_url }})
+![所有城市的列表]({{ '/assets/images/all-cities-with-scroll-view-and-event.gif' | relative_url }})
 
 ## ListView 组件
 
