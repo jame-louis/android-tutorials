@@ -105,7 +105,7 @@ date: 2025-10-25
 
 ### 显示更多城市
 
-![重构布局]({{ '/assets/images/manual-fake-list-view-refactored.png' | relative_url }})
+![重构布局]({{ '/assets/images/manual-fake-list-view-refactor.png' | relative_url }})
 
 首先，我们先重构一下布局文件。
 - 移除4个TextView。
