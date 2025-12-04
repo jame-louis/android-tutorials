@@ -255,7 +255,7 @@ for(String city : cities) {
     - 将城市名称设置到TextView中。
     - 将加载的视图添加到LinearLayout中。
 
-![City.xml布局]({{ '/assets/images/city-layout.xml.png' | relative_url }})
+![City.xml布局]({{ '/assets/images/city-layout.png' | relative_url }})
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -322,16 +322,15 @@ public class MainActivity extends AppCompatActivity {
 ```
 ## 重构
 
-一次“ListView”的重构：从硬编码到自定义 Adapter 模式
-
-### 背景  
 原实现直接把城市字符串循环 inflate 进 LinearLayout，逻辑全部写在 Activity 中，职责混乱、无法复用，且当数据量增大时会因不断创建 View 导致卡顿。
 
 ### 重构目标  
+
 1. 把“如何展示一条数据”与“数据本身”解耦；  
 2. 引入 Adapter 模式，为后续扩展（缓存、复用、Header/Footer）留好口子；  
 
 ### 重构手法  
+
 - 提炼 Adapter  
 将“获取总数 + 创建 item 视图”抽象成 CustomAdapter，Activity 只负责创建 Adapter 并交给 UI 容器。  
 - 封装 UI 容器  
@@ -418,9 +417,11 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 ### 效果  
+
 MainActivity 代码量减半，逻辑清晰；新增“区县”数据源时，只需替换 CityData，无需改动 UI 层。下一步若要支持 View 复用，只需在 CustomListView 里加入 ConvertView 缓存池即可，Activity 仍然无感。
 
 ### 结论  
+
 一次微小的 Adapter 抽象，就让代码从“脚本式堆积”迈向“可扩展组件”；在 Android 世界里，把“for+inflate”改成“Adapter+容器”永远是最划算的重构第一步。
 
 ## ListView 组件
@@ -695,7 +696,7 @@ public class MainActivity extends AppCompatActivity {
 
 ### 运行结果
 
-![list-view-custom-adapter]({{ '/assets/images/list-view-custom-adapter.png' | relative_url }})
+![list-view-custom-adapter]({{ '/assets/images/list-view-custom-adapter.gif' | relative_url }})
 
 ## 总结
 

@@ -58,6 +58,9 @@
             <img src="{{ '/assets/images/group-line.png' | relative_url }}" alt="访客量" style="width: 20px; height: 20px; margin-right: 5px;">
             <span id="busuanzi_page_uv"></span>人
           </span>
+          <button class="print-button" onclick="printToPDF()">
+            📄 打印成PDF
+          </button>
         </div>
         <h1 class="tutorial-title">{{ page.title | escape }}</h1>
         {% if page.creator %}
@@ -291,6 +294,34 @@
           item.classList.add('active');
         }
       });
+    }
+    
+    function printToPDF() {
+      // 临时隐藏不需要在PDF中显示的元素
+      const sidebar = document.getElementById('sidebar');
+      const printButton = document.querySelector('.print-button');
+      const stepNavigations = document.querySelectorAll('.step-navigation');
+      
+      // 保存原始状态
+      const originalStyles = {
+        sidebar: sidebar.style.display,
+        printButton: printButton.style.display
+      };
+      
+      // 隐藏元素
+      sidebar.style.display = 'none';
+      printButton.style.display = 'none';
+      stepNavigations.forEach(nav => nav.style.display = 'none');
+      
+      // 调用浏览器打印功能
+      window.print();
+      
+      // 恢复原始状态
+      setTimeout(() => {
+        sidebar.style.display = originalStyles.sidebar;
+        printButton.style.display = originalStyles.printButton;
+        stepNavigations.forEach(nav => nav.style.display = 'block');
+      }, 100);
     }
   </script>
   <script defer src="https://busuanzi.9420.ltd/js"></script>
