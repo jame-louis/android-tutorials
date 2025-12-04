@@ -240,7 +240,277 @@ for(String city : cities) {
 
 ![所有城市的列表]({{ '/assets/images/all-cities-with-scroll-view-and-event.gif' | relative_url }})
 
+### 使用自定义布局文件City.xml
+
+- 新建一个XML布局文件City.xml，用于定义每个列表项的布局。
+- 在City.xml中，添加一个TextView用于显示城市名称。
+    - 设置TextView的id为city_name。
+    - 设置TextView的高度为64dp。
+    - 设置TextView的文本为城市名称。
+    - 设置TextView的文本大小为30sp。
+    - 设置TextView的重力为居中对齐。
+- 在Java代码中，我们可以使用LayoutInflater来加载City.xml布局文件。
+    - 使用LayoutInflater的inflate()方法加载City.xml布局文件。
+    - 通过findViewById()方法获取TextView的实例。
+    - 将城市名称设置到TextView中。
+    - 将加载的视图添加到LinearLayout中。
+
+![City.xml布局]({{ '/assets/images/city-layout.xml.png' | relative_url }})
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/city_name"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:gravity="center"
+        android:text="城市名称"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+```java
+package com.example.listview;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    private List<String> cities = CityData.getAllCities();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        LinearLayout city_list = findViewById(R.id.city_list);
+        for(String city : cities) {
+            View view = getLayoutInflater().inflate(R.layout.city, city_list, false);
+            TextView tv = view.findViewById(R.id.city_name);
+            tv.setText(city);
+
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(tv.getContext(), tv.getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
+            city_list.addView(view);
+        }
+    }
+}
+```
+## 重构
+
+一次“ListView”的重构：从硬编码到自定义 Adapter 模式
+
+### 背景  
+原实现直接把城市字符串循环 inflate 进 LinearLayout，逻辑全部写在 Activity 中，职责混乱、无法复用，且当数据量增大时会因不断创建 View 导致卡顿。
+
+### 重构目标  
+1. 把“如何展示一条数据”与“数据本身”解耦；  
+2. 引入 Adapter 模式，为后续扩展（缓存、复用、Header/Footer）留好口子；  
+
+### 重构手法  
+- 提炼 Adapter  
+将“获取总数 + 创建 item 视图”抽象成 CustomAdapter，Activity 只负责创建 Adapter 并交给 UI 容器。  
+- 封装 UI 容器  
+自定义 CustomListView，内部仍用 LinearLayout 线性添加，但对外暴露 setAdapter()，屏蔽掉循环 inflate 的细节。  
+- 保留原始布局文件  
+R.layout.city 继续复用，无需再写 XML；点击事件也在 Adapter 中绑定，符合“谁持有数据谁负责交互”的原则。
+
+```java
+package com.example.listview;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    private List<String> cities = CityData.getAllCities();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        CustomListView customListView = findViewbyId(R.id.city_list);
+        CustomAdapter ca = new CustomAdapter(this, cities);
+        customListView.setAdapter(ca);
+    }
+
+    private CustomListView findViewbyId(int id) {
+        CustomListView listView = new CustomListView(id);
+        return listView;
+    }
+
+    private class CustomAdapter {
+        private Context mCtx;
+        private List<String> mData;
+        public CustomAdapter(Context ctx, List<String> cities) {
+            mCtx = ctx;
+            mData = cities;
+        }
+
+        int getCount() {
+            return mData.size();
+        }
+
+        View getView(int position, View convertView, ViewGroup parent)
+        {
+            convertView = LayoutInflater.from(mCtx).inflate(R.layout.city, parent, false);
+            TextView tv = convertView.findViewById(R.id.city_name);
+            tv.setText(mData.get(position));
+
+            tv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(tv.getContext(), tv.getText(), Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            return convertView;
+        }
+    }
+
+    private class CustomListView {
+        private LinearLayout linearLayout;
+        public CustomListView(int id) {
+            linearLayout = findViewById(R.id.city_list);
+        }
+        void setAdapter(CustomAdapter ca) {
+            for(int i = 0; i < ca.getCount(); ++i) {
+                View convertView = new View(linearLayout.getContext());
+                View v = ca.getView(i, convertView, linearLayout);
+                linearLayout.addView(v);
+            }
+        }
+    }
+}
+```
+### 效果  
+MainActivity 代码量减半，逻辑清晰；新增“区县”数据源时，只需替换 CityData，无需改动 UI 层。下一步若要支持 View 复用，只需在 CustomListView 里加入 ConvertView 缓存池即可，Activity 仍然无感。
+
+### 结论  
+一次微小的 Adapter 抽象，就让代码从“脚本式堆积”迈向“可扩展组件”；在 Android 世界里，把“for+inflate”改成“Adapter+容器”永远是最划算的重构第一步。
+
 ## ListView 组件
 
 ListView 是 Android 中常用的 UI 组件，用于显示列表数据。它可以垂直滚动，显示多个列表项。
+
+- 基本用法
+  - 定义布局文件
+    - 在 XML 布局文件中添加 ListView 组件。
+  - 创建 Adapter
+  - 设置 Adapter 到 ListView
+  - 处理点击事件
+
+### 重构
+
+#### 在 XML 布局文件中添加 ListView 组件
+
+- 在 XML 布局文件中添加 ListView 组件
+- 设置 ListView 的 ID 为 city_list
+
+![添加ListView组件]({{ '/assets/images/activity-main-list-view.png' | relative_url }})
+
+#### ArrayAdapter
+
+- 显示城市名称，使用系统提供的 ArrayAdapter。
+
+```java
+ ArrayAdapter<String> ca = new ArrayAdapter<String>(this, R.layout.city, R.id.city_name, cities);
+```
+#### 设置 Adapter 到 ListView
+
+- 调用 ListView 的 setAdapter() 方法，将 ArrayAdapter 实例设置到 ListView 中。
+
+```java
+ listView.setAdapter(ca);
+```
+
+#### 处理点击事件
+
+- 为 ListView 添加点击事件监听器，当用户点击列表项时，弹出 Toast 显示选中的城市名称。
+
+```java
+ listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String city = ca.getItem(position);
+        Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
+    }
+});
+```
+#### MainActivity 代码
+
+```java
+package com.example.listview;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity {
+
+    private List<String> cities = CityData.getAllCities();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        ListView listView = findViewById(R.id.city_list);
+        ArrayAdapter<String> ca = new ArrayAdapter<String>(this, R.layout.city, R.id.city_name, cities);
+        listView.setAdapter(ca);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String city = ca.getItem(position);
+                Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
+```
+
+### 效果
+
+![ListView]({{ '/assets/images/list-view.png' | relative_url }})
+
+
 
