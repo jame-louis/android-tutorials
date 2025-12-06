@@ -322,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
 
 #### 运行应用
 
-![音频播放器]({{ "/assets/images/run-app-media-player.png" | relative_url }})
+![音频播放器]({{ "/assets/images/run-app-media-player.gif" | relative_url }})
 
 ## 总结
 

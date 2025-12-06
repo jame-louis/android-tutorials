@@ -623,3 +623,75 @@
     align-items: center;
     gap: 4px;
 }
+
+/* ---------- 整体布局 ---------- */
+table {
+  width: 100%;
+  max-width: 720px;
+  margin: 2rem auto;
+  border-collapse: collapse;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #222;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- 表头 ---------- */
+table thead {
+  background: linear-gradient(135deg, #3f51b5 0%, #303f9f 100%);
+  color: #fff;
+}
+
+table th {
+  padding: 14px 20px;
+  text-align: left;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+/* ---------- 表体 ---------- */
+table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  vertical-align: top;
+}
+
+/* 最后一行去掉底边 */
+table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* 斑马纹 + hover */
+table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+table tbody tr:hover {
+  background: #f1f5ff;
+}
+
+/* ---------- 行内代码 ---------- */
+table code {
+  background: #eef2ff;
+  color: #3f51b5;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Fira Code", Consolas, monospace;
+  font-size: 0.9em;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 600px) {
+  table {
+    font-size: 14px;
+  }
+  table th,
+  table td {
+    padding: 10px 12px;
+  }
+}
