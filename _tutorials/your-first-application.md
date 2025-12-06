@@ -5,7 +5,7 @@ tutorial_name: your-first-application
 difficulty: Beginner
 duration: 20 mins
 creator: jame louis
-date: 2025-10-20
+date: 2025-10-12
 ---
 
 ## 准备工作
