@@ -8,7 +8,7 @@ creator: jame louis
 date: 2025-12-11
 ---
 
-## 1. 简介
+## 简介
 
 ![找色差游戏]({{ '/assets/images/color-difference-game.gif' | relative_url }})
 
@@ -46,17 +46,13 @@ date: 2025-12-11
 - 掌握列表视图的使用，如果对列表视图不熟悉，请先完成[列表视图]({{ '/tutorials/list-view' | relative_url }})
 - 30–60 分钟的空闲时间
 
----
-
 ## 创建项目
 
 - 项目名称：ColorDifferenceGame
 - 包名：com.example.colordifferencegame
 - 如遇到问题，请参考[您的第一个Android应用]({{ '/tutorials/your-first-application' | relative_url }})。
 
----
-
-## 3. 设计游戏主界面
+## 设计游戏主界面
 
 ### **理解布局文件**
 
@@ -186,9 +182,7 @@ Android应用使用XML文件定义用户界面。让我们打开主布局文件�
 
 > **小贴士**：`android:id="@+id/tvScore"` 创建了一个名为tvScore的ID，我们可以在Java代码中通过这个ID找到它并修改内容。
 
----
-
-## 4. 编写游戏逻辑引擎
+## 编写游戏逻辑引擎
 
 ### **创建游戏逻辑类**
 
@@ -285,9 +279,7 @@ Math.max(0, Math.min(255, baseR + change));
 > - **网格递增**：2关→3×3，4关→4×4，6关→5×5...
 > - **随机性**：每次颜色不同，且差异可能出现在R/G/B任意分量
 
----
-
-## 5. 实现主游戏功能
+## 实现主游戏功能
 
 ### **打开MainActivity.java**
 
@@ -531,9 +523,7 @@ public class MainActivity extends AppCompatActivity {
 
 > **重要概念**：`findViewById()`是通过ID查找界面组件的传统方法。每个在XML中定义了`android:id`的组件，都可以通过这种方式在Java代码中获取实例。
 
----
-
-## 6. 添加数据存储功能
+## 添加数据存储功能
 
 ### **创建数据库帮助类**
 
@@ -671,9 +661,9 @@ public class ScoreDatabaseHelper extends SQLiteOpenHelper {
    - `LIMIT ?`限制返回数量
    - 使用`Cursor`遍历结果集
 
----
 
-## 7. 创建排行榜界面
+
+## 创建排行榜界面
 
 ### **创建布局文件**
 
@@ -919,9 +909,9 @@ public class LeaderboardActivity extends AppCompatActivity {
 </manifest>
 ```
 
----
 
-## 8. 运行和测试你的游戏
+
+## 运行和测试你的游戏
 
 ### **运行应用**
 
@@ -951,9 +941,8 @@ public class LeaderboardActivity extends AppCompatActivity {
 **问题**：排行榜点击无反应
 - **解决**：检查`AndroidManifest.xml`中是否注册了`LeaderboardActivity`
 
----
 
-## 9. 大功告成！
+## 小结
 
 ### **你学到的技能**
 
@@ -989,9 +978,6 @@ public class LeaderboardActivity extends AppCompatActivity {
 4. **分享功能**：将高分截图分享到社交媒体
 5. **主题切换**：支持深色/浅色模式
 
-
----
-
 ### **最终成果**
 
 你现在拥有一个功能完整的Android游戏应用，包含：
@@ -1000,4 +986,41 @@ public class LeaderboardActivity extends AppCompatActivity {
 - 清晰的Material Design界面
 - 60秒紧张刺激的挑战
 
-快去分享给朋友们，看看谁能通关最多关卡吧！
+## 进阶
+
+![找色差游戏]({{ "/assets/images/color-difference-game-2.gif" | relative_url }})
+
+- 游戏界面是正方形
+    - 把GridLayout替换成LinearLayout，gravity设置为center
+    - 里面再嵌套一个自定义SquareGridLayout，继承GridLayout，重写onMeasure方法，设置宽度等于高度
+- 游戏色块是圆形
+    - GradientDrawable对象，设置shape为oval，设置颜色
+    - 把GradientDrawable对象设置为Button的背景
+
+```java
+// 自定义SquareGridLayout类
+public class SquareGridLayout extends GridLayout {
+    public SquareGridLayout(Context context) {
+        super(context);
+    }
+    
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        int width = getMeasuredWidth();
+        setMeasuredDimension(width, width);
+    }
+}
+// GradientDrawable对象，设置shape为oval，设置颜色
+GradientDrawable drawable = new GradientDrawable();
+drawable.setShape(GradientDrawable.OVAL);
+drawable.setColor(color);
+
+// 把GradientDrawable对象设置为Button的背景
+button.setBackgroundDrawable(drawable);
+```
+
+
+## 参考
+
+- [找色差游戏](https://www.zhaosecha.com/)
