@@ -1,15 +1,15 @@
-// Header - Modern Glass Morphism
+// Header - Clean Learning
 .header {
-  background: rgba(30, 41, 59, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid $border-color;
   position: fixed;
   top: 0;
   width: 100%;
   z-index: $z-fixed;
   padding: $spacing-sm $spacing-lg;
-  box-shadow: $shadow-lg;
+  box-shadow: $shadow-sm;
 }
 
 .nav-container {
@@ -65,19 +65,17 @@
   gap: $spacing-lg;
 }
 
-// Sidebar - Interactive Glass Design
+// Sidebar - Clean Learning
 .sidebar {
   width: 360px;
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: $bg-card;
+  border: 1px solid $border-color;
   overflow-y: auto;
   position: sticky;
   top: 100px;
   height: calc(100vh - 100px);
   border-radius: $border-radius-lg;
-  box-shadow: $shadow-xl;
+  box-shadow: $shadow-sm;
   padding: $spacing-lg;
   transition: all $transition-medium;
 
@@ -226,16 +224,14 @@
   }
 }
 
-// Tutorial Header - Hero Section
+// Tutorial Header - Clean Learning
 .tutorial-header {
-  background: rgba(30, 41, 59, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: $bg-card;
   border-radius: $border-radius-lg;
   padding: $spacing-xl;
   margin-bottom: $spacing-lg;
-  box-shadow: $shadow-xl;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-color;
   position: relative;
   overflow: hidden;
 
@@ -245,7 +241,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
+    height: 3px;
     background: $primary-gradient;
   }
 }
@@ -346,16 +342,14 @@
   }
 }
 
-// Content Body - Modern Card Design
+// Content Body - Clean Learning Design
 .content-body {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: $bg-card;
   border-radius: $border-radius-lg;
   padding: $spacing-xl;
   margin-bottom: $spacing-lg;
-  box-shadow: $shadow-lg;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: $shadow-sm;
+  border: 1px solid $border-color;
   position: relative;
 
   h2 {

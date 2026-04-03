@@ -9,12 +9,13 @@ title: "安卓教程"
       <span class="gradient-text">Android 开发教程</span>
     </h1>
     <p class="hero-subtitle">
-      从零基础到高级应用开发，一步步学习 Android 编程
+      从零基础开始，一步步学习 Android 编程<br>
+      简洁易懂，适合新手
     </p>
     <div class="hero-meta">
       <span class="meta-item">📚 {{ site.tutorials | size }} 个教程</span>
-      <span class="meta-item">💡 适合初学者</span>
-      <span class="meta-item">🚀 实践导向</span>
+      <span class="meta-item">💡 零基础友好</span>
+      <span class="meta-item">🚀 清晰易懂</span>
     </div>
   </div>
   <div class="tutorials-list" style="margin-top: 60px;">
@@ -46,18 +47,16 @@ title: "安卓教程"
 
 .hero-content {
   margin-bottom: 60px;
-  position: relative;
-  z-index: 1;
 }
 
 .hero-title {
   font-size: 3.5rem;
   margin-bottom: 20px;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  color: #1e293b;
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -65,9 +64,9 @@ title: "安卓教程"
 
 .hero-subtitle {
   font-size: 1.25rem;
-  color: #cbd5e1;
+  color: #475569;
   margin-bottom: 30px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .hero-meta {
@@ -76,26 +75,30 @@ title: "安卓教程"
   gap: 20px;
   flex-wrap: wrap;
   font-size: 0.9rem;
-  color: #94a3b8;
+  color: #475569;
 }
 
 .meta-item {
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #f1f5f9;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s;
 }
 
 .meta-item:hover {
-  background: rgba(102, 126, 234, 0.2);
-  border-color: rgba(102, 126, 234, 0.3);
+  background: #e0e7ff;
+  border-color: #2563eb;
   transform: translateY(-2px);
-  color: #fff;
+  color: #1e293b;
 }
 
 .tutorials-list {
   margin-top: 60px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
 }
 
 .tutorials-list ul {
@@ -105,6 +108,7 @@ title: "安卓教程"
 
 .tutorials-list li {
   margin-bottom: 15px;
+  list-style-type: none;
 }
 
 .tutorial-link-content {
@@ -117,47 +121,42 @@ title: "安卓教程"
 .tutorial-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #f8fafc;
-  transition: color 0.3s;
+  color: #1e293b;
+  transition: color 0.2s;
 }
 
 .tutorial-meta-info {
   display: flex;
   gap: 12px;
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #475569;
   flex-wrap: wrap;
 }
 
 .tutorial-meta-info span {
   padding: 4px 12px;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
 }
 
 .difficulty {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
   color: white !important;
   font-weight: 600;
+  border: none !important;
 }
 
 .duration {
-  background: rgba(102, 126, 234, 0.1) !important;
-  border-color: rgba(102, 126, 234, 0.2) !important;
-  color: #a78bfa !important;
+  background: #e0e7ff !important;
+  border-color: #2563eb !important;
+  color: #2563eb !important;
 }
 
 .date {
-  background: rgba(79, 172, 254, 0.1) !important;
-  border-color: rgba(79, 172, 254, 0.2) !important;
-  color: #60a5fa !important;
-}
-
-.tutorials-list li a:hover {
-  .tutorial-title {
-    color: #667eea;
-  }
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #475569 !important;
 }
 
 @media (max-width: 768px) {

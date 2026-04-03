@@ -1,5 +1,5 @@
-// Base Styles - Modern Dark Theme
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+// Base Styles - Clean Light Theme for Learning
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
 
 * {
   margin: 0;
@@ -12,74 +12,50 @@ html {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: $font-size-base;
-  line-height: 1.6;
+  line-height: 1.7;
   color: $text-primary;
   background: $bg-primary;
   min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-}
-
-// Animated Background
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(240, 147, 251, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: -1;
-  animation: floatingBackground 20s ease-in-out infinite;
-}
-
-@keyframes floatingBackground {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  33% { transform: translate(30px, -30px) rotate(1deg); }
-  66% { transform: translate(-20px, 20px) rotate(-1deg); }
 }
 
 // Typography
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Noto Sans SC', 'Inter', sans-serif;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.3;
   margin-bottom: $spacing-md;
   color: $text-primary;
 }
 
-h1 { font-size: $font-size-5xl; }
-h2 { font-size: $font-size-4xl; }
-h3 { font-size: $font-size-3xl; }
-h4 { font-size: $font-size-2xl; }
-h5 { font-size: $font-size-xl; }
-h6 { font-size: $font-size-lg; }
+h1 { font-size: $font-size-4xl; }
+h2 { font-size: $font-size-3xl; }
+h3 { font-size: $font-size-2xl; }
+h4 { font-size: $font-size-xl; }
+h5 { font-size: $font-size-lg; }
+h6 { font-size: $font-size-base; }
 
 p {
-  margin-bottom: $spacing-sm;
+  margin-bottom: $spacing-md;
   color: $text-secondary;
   font-size: $font-size-base;
 }
 
 a {
-  color: $text-primary;
+  color: #2563eb;
   text-decoration: none;
   transition: all $transition-fast;
-}
 
-a:hover {
-  color: #667eea;
+  &:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
 }
 
 // Selection
 ::selection {
-  background: rgba(102, 126, 234, 0.3);
+  background: rgba(37, 99, 235, 0.2);
   color: $text-primary;
 }
 
@@ -89,16 +65,16 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: $bg-secondary;
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #667eea, #764ba2);
+  background: #cbd5e1;
   border-radius: 4px;
-}
 
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #764ba2, #667eea);
+  &:hover {
+    background: #94a3b8;
+  }
 }
 
 // Utility Classes
@@ -116,22 +92,20 @@ a:hover {
   display: inline-block;
 }
 
-.glass {
-  background: rgba(30, 41, 59, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.card {
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
 }
 
 // Print Styles
 @media print {
   body {
-    font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', 'SimSun', 'Songti SC', serif;
     background: white;
     color: black;
   }
 
-  // 确保所有内容都能打印
   .content-area {
     width: 100%;
     max-width: 100%;
@@ -139,7 +113,6 @@ a:hover {
     padding: 0;
   }
 
-  // 确保中文字体正常显示
   * {
     font-family: inherit;
   }
