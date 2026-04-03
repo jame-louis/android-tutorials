@@ -1,25 +1,136 @@
+// Base Styles - Modern Dark Theme
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', sans-serif;
-  background: linear-gradient(135deg, $bg-gradient-start 0%, $bg-gradient-end 100%);
-  color: $text-dark;
-  line-height: 1.6;
-  min-height: 100vh;
+html {
+  scroll-behavior: smooth;
 }
 
-// 打印样式支持
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: $font-size-base;
+  line-height: 1.6;
+  color: $text-primary;
+  background: $bg-primary;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+// Animated Background
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(240, 147, 251, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(79, 172, 254, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: floatingBackground 20s ease-in-out infinite;
+}
+
+@keyframes floatingBackground {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(30px, -30px) rotate(1deg); }
+  66% { transform: translate(-20px, 20px) rotate(-1deg); }
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: $spacing-md;
+  color: $text-primary;
+}
+
+h1 { font-size: $font-size-5xl; }
+h2 { font-size: $font-size-4xl; }
+h3 { font-size: $font-size-3xl; }
+h4 { font-size: $font-size-2xl; }
+h5 { font-size: $font-size-xl; }
+h6 { font-size: $font-size-lg; }
+
+p {
+  margin-bottom: $spacing-sm;
+  color: $text-secondary;
+  font-size: $font-size-base;
+}
+
+a {
+  color: $text-primary;
+  text-decoration: none;
+  transition: all $transition-fast;
+}
+
+a:hover {
+  color: #667eea;
+}
+
+// Selection
+::selection {
+  background: rgba(102, 126, 234, 0.3);
+  color: $text-primary;
+}
+
+// Scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $bg-secondary;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #667eea, #764ba2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #764ba2, #667eea);
+}
+
+// Utility Classes
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-lg;
+}
+
+.gradient-text {
+  background: $primary-gradient;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.glass {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+// Print Styles
 @media print {
   body {
     font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'WenQuanYi Micro Hei', 'SimSun', 'Songti SC', serif;
     background: white;
     color: black;
   }
-  
+
   // 确保所有内容都能打印
   .content-area {
     width: 100%;
@@ -27,20 +138,10 @@ body {
     margin: 0;
     padding: 0;
   }
-  
+
   // 确保中文字体正常显示
   * {
     font-family: inherit;
-  }
-}
-
-a {
-  color: $primary-blue;
-  text-decoration: none;
-  transition: color $transition-fast;
-
-  &:hover {
-    color: $secondary-blue;
   }
 }
 

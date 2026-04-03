@@ -12,10 +12,11 @@
     "tutorialName": {{ page.tutorial_name | jsonify }}
   }
   </script>
+  {% seo %}
 </head>
 <body>
   {% include header.html %}
-  
+
   <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <div class="main-container">
     <aside class="sidebar" id="sidebar">
@@ -29,12 +30,12 @@
           🔄 重置进度
         </button>
       </div>
-      
+
       <div class="tutorial-steps" id="tutorialSteps">
         <!-- Steps will be generated dynamically -->
       </div>
     </aside>
-    
+
     <main class="content-area">
       <div class="tutorial-header">
         <div class="tutorial-meta">
@@ -94,7 +95,7 @@
       {% include comments.html %}
     </main>
   </div>
-  
+
   <script>
     let tutorialSteps = [];
 
@@ -109,49 +110,49 @@
     document.addEventListener('DOMContentLoaded', function() {
       const config = JSON.parse(document.getElementById('tutorial-config').textContent);
       const content = document.getElementById('tutorial-content');
-      
+
       // Find all h2 elements that start with "Step"
       const allH2 = content.querySelectorAll('h2');
       const stepHeaders = Array.from(allH2);
-      
+
       if (stepHeaders.length === 0) {
         console.warn('No step headers found');
         return;
       }
-      
+
       // Wrap each step in a container
       stepHeaders.forEach((header, index) => {
         const stepDiv = document.createElement('div');
         stepDiv.className = 'tutorial-step';
         stepDiv.dataset.step = index + 1;
-        
+
         // Extract step title
         const stepTitle = header.textContent.trim().replace(/^Step\s+\d+:\s*/i, '');
-        
+
         // Collect elements between this header and the next
         let currentElement = header;
         const stepElements = [header];
-        
+
         while (currentElement.nextElementSibling) {
           currentElement = currentElement.nextElementSibling;
-          
+
           // Stop if we hit another step header
           if (currentElement.tagName === 'H2') {
             break;
           }
-          
+
           stepElements.push(currentElement);
         }
-        
+
         // Move elements into step container
         stepElements.forEach(el => {
           stepDiv.appendChild(el.cloneNode(true));
         });
-        
+
         // Add navigation buttons
         const navDiv = document.createElement('div');
         navDiv.className = 'step-navigation';
-        
+
         // Previous button
         if (index > 0) {
           const prevBtn = document.createElement('button');
@@ -162,7 +163,7 @@
         } else {
           navDiv.appendChild(document.createElement('div'));
         }
-        
+
         // Next/Complete button
         if (index < stepHeaders.length - 1) {
           const nextBtn = document.createElement('button');
@@ -177,61 +178,61 @@
           completeBtn.onclick = completeStepAndFinish;
           navDiv.appendChild(completeBtn);
         }
-        
+
         stepDiv.appendChild(navDiv);
         tutorialSteps.push({ div: stepDiv, title: stepTitle });
-        
+
         // Remove original elements
         stepElements.forEach(el => el.remove());
       });
-      
+
       // Add all steps to content
       tutorialSteps.forEach(step => content.appendChild(step.div));
-      
+
       // Update config with total steps
       config.totalSteps = tutorialSteps.length;
       window.tutorialConfig = config;
-      
+
       // Generate sidebar
       generateSidebar();
-      
+
       // Show first step or saved progress
       const progress = getProgress();
       const lastCompleted = Math.max(0, ...progress);
       showStep(lastCompleted > 0 ? lastCompleted : 1);
       updateProgress();
     });
-    
+
     function generateSidebar() {
       const stepsContainer = document.getElementById('tutorialSteps');
       stepsContainer.innerHTML = '';
-      
+
       tutorialSteps.forEach((step, index) => {
         const stepItem = document.createElement('div');
         stepItem.className = 'step-item';
         stepItem.dataset.step = index + 1;
         stepItem.onclick = () => showStep(index + 1);
-        
+
         const stepNumber = document.createElement('div');
         stepNumber.className = 'step-number';
         stepNumber.textContent = index + 1;
-        
+
         const stepTitle = document.createElement('div');
         stepTitle.className = 'step-title';
         stepTitle.textContent = step.title;
-        
+
         stepItem.appendChild(stepNumber);
         stepItem.appendChild(stepTitle);
         stepsContainer.appendChild(stepItem);
       });
     }
-    
+
     function showStep(stepNum) {
       document.querySelectorAll('.tutorial-step').forEach(el => {
         el.classList.remove('active');
       });
       document.querySelector('[data-step="complete"]').style.display = 'none';
-      
+
       const targetStep = document.querySelector(`.tutorial-step[data-step="${stepNum}"]`);
       if (targetStep) {
         targetStep.classList.add('active');
@@ -239,41 +240,41 @@
         updateSidebarActive(stepNum);
       }
     }
-    
+
     function completeStep(currentStep) {
       saveProgress(currentStep);
       updateProgress();
       showStep(currentStep + 1);
     }
-    
+
     function completeStepAndFinish() {
       const config = window.tutorialConfig;
       saveProgress(config.totalSteps);
       updateProgress();
-      
+
       // Hide all steps
       document.querySelectorAll('.tutorial-step').forEach(el => {
         el.classList.remove('active');
       });
-      
+
       // Show completion screen
       document.querySelector('[data-step="complete"]').style.display = 'block';
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    
+
     function saveProgress(stepNum) {
       const config = window.tutorialConfig;
       const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
       const tutorialProgress = progress[config.tutorialName] || [];
-      
+
       if (!tutorialProgress.includes(stepNum)) {
         tutorialProgress.push(stepNum);
       }
-      
+
       progress[config.tutorialName] = tutorialProgress;
       localStorage.setItem('tutorialProgress', JSON.stringify(progress));
     }
-    
+
     function getProgress() {
       const config = window.tutorialConfig;
       const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
@@ -287,17 +288,17 @@
       localStorage.setItem('tutorialProgress', JSON.stringify(progress));
       window.location.reload();
     }
-    
+
     function updateProgress() {
       const config = window.tutorialConfig;
       const completed = getProgress();
       const progressFill = document.getElementById('progressFill');
       const progressText = document.getElementById('progressText');
-      
+
       const percentage = (completed.length / config.totalSteps) * 100;
       progressFill.style.width = percentage + '%';
       progressText.textContent = `${completed.length} of ${config.totalSteps} 已完成✅`;
-      
+
       // Update sidebar
       document.querySelectorAll('.step-item').forEach(item => {
         const stepNum = parseInt(item.dataset.step);
@@ -306,7 +307,7 @@
         }
       });
     }
-    
+
     function updateSidebarActive(stepNum) {
       document.querySelectorAll('.step-item').forEach(item => {
         item.classList.remove('active');
@@ -315,40 +316,40 @@
         }
       });
     }
-    
+
     function printToPDF() {
       // 临时隐藏不需要在PDF中显示的元素
       const sidebar = document.getElementById('sidebar');
       const printButton = document.querySelector('.print-button');
       const stepNavigations = document.querySelectorAll('.step-navigation');
       const tutorialSteps = document.querySelectorAll('.tutorial-step');
-      
+
       // 保存原始状态
       const originalStyles = {
         sidebar: sidebar.style.display,
         printButton: printButton.style.display
       };
-      
+
       // 保存当前活跃的步骤
       const activeStep = document.querySelector('.tutorial-step.active');
-      
+
       // 隐藏元素
       sidebar.style.display = 'none';
       printButton.style.display = 'none';
       stepNavigations.forEach(nav => nav.style.display = 'none');
-      
+
       // 临时显示所有教程步骤
       tutorialSteps.forEach(step => step.style.display = 'block');
-      
+
       // 调用浏览器打印功能
       window.print();
-      
+
       // 恢复原始状态
       setTimeout(() => {
         sidebar.style.display = originalStyles.sidebar;
         printButton.style.display = originalStyles.printButton;
         stepNavigations.forEach(nav => nav.style.display = 'block');
-        
+
         // 恢复活跃步骤状态
         tutorialSteps.forEach(step => step.style.display = 'none');
         if (activeStep) {
@@ -357,6 +358,7 @@
       }, 100);
     }
   </script>
+
   <script defer src="https://busuanzi.9420.ltd/js"></script>
   <script src="{{ '/assets/js/clipboard.js' | relative_url }}"></script>
 </body>
