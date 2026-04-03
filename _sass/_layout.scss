@@ -109,6 +109,30 @@
   margin-top: $spacing-sm;
 }
 
+.reset-progress-btn {
+  background: rgba(0, 0, 0, 0.05);
+  color: $text-medium;
+  border: none;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $border-radius;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-fast;
+  width: 100%;
+  margin-top: $spacing-sm;
+
+  &:hover {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    transform: scale(1.02);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
 // Tutorial Steps
 .tutorial-steps {
   padding: $spacing-md 0;

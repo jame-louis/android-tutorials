@@ -1,38 +1,44 @@
 /* 复制按钮样式 */
 pre.highlight {
   position: relative;
-  padding-top: 30px; /* 为按钮留出空间 */
+  padding-top: 45px; /* 为按钮留出空间 */
+}
+
+.highlight {
+  background: linear-gradient(135deg, #2d2d2d 0%, #1e1e1e 100%);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.highlight pre {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
 }
 
 .copy-code-btn {
   position: absolute;
-  top: 5px;
-  right: 5px;
-  padding: 3px 10px;
+  top: 8px;
+  right: 8px;
+  padding: 6px 12px;
   font-size: 12px;
-  color: #586069;
-  background-color: #f6f8fa;
-  border: 1px solid #d1d5da;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0078ff 0%, #00c6ff 100%);
+  border: none;
   border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 120, 255, 0.3);
 }
 
 .copy-code-btn:hover {
-  background-color: #e1e4e8;
-  color: #24292e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 120, 255, 0.4);
 }
 
-/* 深色主题适配 */
-@media (prefers-color-scheme: dark) {
-  .copy-code-btn {
-    color: #8b949e;
-    background-color: #161b22;
-    border-color: #30363d;
-  }
-  .copy-code-btn:hover {
-    background-color: #30363d;
-    color: #c9d1d9;
-  }
+.copy-code-btn:active {
+  transform: translateY(0);
 }

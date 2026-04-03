@@ -8,7 +8,7 @@ creator: jame louis
 date: 2025-10-25
 ---
 
-## 准备工作
+## Step 1: 准备工作
 
 在此教程中，您将学习如何在Android应用中创建和使用列表视图。
 
@@ -25,13 +25,13 @@ date: 2025-10-25
 - 如何在列表视图中显示数据
 - 如何处理列表项的点击事件
 
-## 创建项目
+## Step 2: 创建项目
 
 - 项目名称：ListView
 - 包名：com.example.listview
 - 如遇到问题，请参考[您的第一个Android应用]({{ '/tutorials/your-first-application' | relative_url }})。
 
-## 显示列表数据
+## Step 3: 显示列表数据
 
 比如我们有一个包含中国城市的列表，我们想在Android应用中显示这些城市。我们先从简单的包含北上广深的4个城市列表开始。
 
@@ -320,16 +320,16 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
-## 重构
+## Step 4: 重构
 
 原实现直接把城市字符串循环 inflate 进 LinearLayout，逻辑全部写在 Activity 中，职责混乱、无法复用，且当数据量增大时会因不断创建 View 导致卡顿。
 
-### 重构目标  
+### Step 4: 重构目标  
 
 1. 把“如何展示一条数据”与“数据本身”解耦；  
 2. 引入 Adapter 模式，为后续扩展（缓存、复用、Header/Footer）留好口子；  
 
-### 重构手法  
+### Step 4: 重构手法  
 
 - 提炼 Adapter  
 将“获取总数 + 创建 item 视图”抽象成 CustomAdapter，Activity 只负责创建 Adapter 并交给 UI 容器。  
@@ -424,7 +424,7 @@ MainActivity 代码量减半，逻辑清晰；新增“区县”数据源时，�
 
 一次微小的 Adapter 抽象，就让代码从“脚本式堆积”迈向“可扩展组件”；在 Android 世界里，把“for+inflate”改成“Adapter+容器”永远是最划算的重构第一步。
 
-## ListView 组件
+## Step 5: ListView 组件
 
 ListView 是 Android 中常用的 UI 组件，用于显示列表数据。它可以垂直滚动，显示多个列表项。
 
@@ -514,7 +514,7 @@ public class MainActivity extends AppCompatActivity {
 ![ListView]({{ '/assets/images/list-view.gif' | relative_url }})
 
 
-## 自定义 Adapter
+## Step 6: 自定义 Adapter
 
 到此，我们已经完成了 ListView 的基本用法。如果我们需要显示更多的信息，比如“城市照片”，我们可以自定义 Adapter。
 
@@ -698,7 +698,7 @@ public class MainActivity extends AppCompatActivity {
 
 ![list-view-custom-adapter]({{ '/assets/images/list-view-custom-adapter.gif' | relative_url }})
 
-## 总结
+## Step 7: 总结
 
 - 如何创建和配置列表视图
 - 如何在列表视图中显示数据

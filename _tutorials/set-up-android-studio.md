@@ -8,7 +8,7 @@ creator: jame louis
 date: 2025-10-10
 ---
 
-##  准备工作
+## Step 1: 准备工作
 
 在本教程中，你将学习如何下载并安装 Android Studio，这是一个用于开发 Android 应用的集成开发环境（IDE）。
 
@@ -23,7 +23,7 @@ Android Studio 是 Google 提供的官方 IDE，用于开发 Android 应用。�
 - 计算机可以访问网络
 - 30–60 分钟的空闲时间
 
-## 摘要
+## Step 2: 摘要
 
 - 集成开发环境（IDE）是一组用于开发软件的工具。
 - Android Studio 是基于 IntelliJ IDEA 的IDE，用于开发 Android 应用。

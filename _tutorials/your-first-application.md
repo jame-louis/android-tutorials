@@ -31,7 +31,7 @@ date: 2025-10-12
 
 您将创建一个简单的Android应用，该应用在屏幕上显示“Hello World!”文本。
 
-##  创建项目
+## Step 1: 创建项目
 
 
 在本教程中， 我们将使用Android Studio提供的Empty Activity项目模板创建一个新的Android项目。
@@ -72,7 +72,7 @@ Gradle's dependency cache may be corrupt (this sometimes occurs after a network 
 
 
 
-##  Android Studio 界面
+## Step 2: Android Studio 界面
 
 ![Android Studio 界面]({{ '/assets/images/android-studio-interface.png' | relative_url }})
 
@@ -100,7 +100,7 @@ Gradle's dependency cache may be corrupt (this sometimes occurs after a network 
 - 日志cat（Logcat）：显示应用运行时的日志信息。
   - 过滤选项：用于筛选显示的日志信息，如按标签（Tag）、优先级（Priority）等。
 
-## 安装模拟器
+## Step 3: 安装模拟器
 
 有两种方式可以安装模拟器：官方模拟器和第三方模拟器。
 
@@ -121,7 +121,7 @@ Gradle's dependency cache may be corrupt (this sometimes occurs after a network 
 
 ![夜神模拟器]({{ '/assets/images/third-android-emulator.png' | relative_url }})
 
-## 运行应用
+## Step 4: 运行应用
 
 ![运行按钮]({{ '/assets/images/build-run.png' | relative_url }})
 

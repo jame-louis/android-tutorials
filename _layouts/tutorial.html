@@ -16,6 +16,7 @@
 <body>
   {% include header.html %}
   
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
   <div class="main-container">
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
@@ -24,6 +25,9 @@
           <div class="progress-fill" id="progressFill"></div>
         </div>
         <div class="progress-text" id="progressText">0 of 0 completed</div>
+        <button class="reset-progress-btn" onclick="resetProgress()" style="margin-top: 12px; padding: 6px 12px; font-size: 12px; border-radius: 6px; background: rgba(0,0,0,0.05); border: none; cursor: pointer; transition: all 0.2s;">
+          🔄 重置进度
+        </button>
       </div>
       
       <div class="tutorial-steps" id="tutorialSteps">
@@ -93,7 +97,15 @@
   
   <script>
     let tutorialSteps = [];
-    
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       const config = JSON.parse(document.getElementById('tutorial-config').textContent);
       const content = document.getElementById('tutorial-content');
@@ -266,6 +278,14 @@
       const config = window.tutorialConfig;
       const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
       return progress[config.tutorialName] || [];
+    }
+
+    function resetProgress() {
+      const config = window.tutorialConfig;
+      const progress = JSON.parse(localStorage.getItem('tutorialProgress') || '{}');
+      delete progress[config.tutorialName];
+      localStorage.setItem('tutorialProgress', JSON.stringify(progress));
+      window.location.reload();
     }
     
     function updateProgress() {

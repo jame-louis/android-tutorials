@@ -18,10 +18,107 @@
   .header {
     height: 70px;
   }
+
+  .sidebar {
+    position: fixed;
+    left: -320px;
+    z-index: 999;
+    width: 85%;
+    max-width: 320px;
+
+    &.open {
+      left: 0;
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+
+    &.open {
+      display: block;
+    }
+  }
+
+  .tutorial-header {
+    padding: $spacing-lg;
+  }
+
+  .tutorial-meta {
+    gap: $spacing-sm;
+  }
+
+  .content-body {
+    padding: $spacing-lg;
+  }
+
+  .content-body h2 {
+    font-size: 20px;
+  }
+
+  .content-body h3 {
+    font-size: 18px;
+  }
+
+  .content-body p {
+    font-size: 15px;
+  }
+
+  .step-navigation {
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  .nav-button, .complete-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .print-button {
+    width: 100%;
+    margin-top: $spacing-sm;
+  }
 }
 
 @media (max-width: $tablet) {
   .right-sidebar {
     display: none;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+
+  .content-area {
+    padding: 0 $spacing-lg;
+  }
+}
+
+@media (min-width: $mobile + 1) and (max-width: $tablet) {
+  .sidebar {
+    width: 280px;
+  }
+}
+
+/* Better touch targets for mobile */
+@media (max-width: $mobile) {
+  .step-item {
+    padding: $spacing-lg;
+    min-height: 50px;
+  }
+
+  .nav-button, .complete-button {
+    min-height: 48px;
+  }
+
+  button {
+    min-height: 44px;
   }
 }
